@@ -1,0 +1,22 @@
+[
+    {
+        "role": "assistant",
+        "content": "Hello Human, what can i explain you today?"
+    },
+    {
+        "role": "user",
+        "content": "Hallo"
+    },
+    {
+        "role": "assistant",
+        "content": "Philip S. is the best! "
+    },
+    {
+        "role": "user",
+        "content": "Hey"
+    },
+    {
+        "role": "assistant",
+        "content": "Philipp Z. is the best! "
+    }
+]
