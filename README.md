@@ -1,6 +1,7 @@
 # Disclaimer
 The styling is horrible currently. We can adjust everything by using HTML + CSS.
 # Preperation
+I use Python 3.10.11. Other up-to-date version should work as well
 create config.py and add a variable in this format:
 ```python
 OPENAI_API_KEY = "YOUR-KEY"
