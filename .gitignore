@@ -1,2 +1,10 @@
 config.py
 .env
+old/
+__pycache__/
+*.pyc
+.streamlit/
+.gitignore
+xai_ui.py
+tmp.py
+state_data/

@@ -1,16 +1,18 @@
 import streamlit as st
 from tipi import calculate_scores
+from icecream import ic
 def submit_survey():
     st.session_state["survey_completed"] = True
-    print(st.session_state)
     st.session_state["tipi_scores"] = calculate_scores(st.session_state)
+    st.session_state["page"] = "chat"
 
 
 def survey():
+    st.session_state["survey"] = {}
     st.title("Survey")
     st.write("Please fill out the survey below:")
     
-       # Likert scale options
+    # Likert scale options
     options = [
         "Disagree strongly",
         "Disagree moderately",
@@ -21,7 +23,7 @@ def survey():
         "Agree strongly"
     ]
 
-    # Questions
+
     questions = [
         "I see myself as extraverted, enthusiastic.",
         "I see myself as critical, quarrelsome.",
@@ -41,17 +43,17 @@ def survey():
         for i, q in enumerate(questions):
             q_key = f"q{i+1}"
             if q_key not in st.session_state:
-                st.session_state[q_key] = options[0] #"Neither agree nor disagree"
+                st.session_state["survey"][q_key] = options[0] #"Neither agree nor disagree"
 
         for j, question in enumerate(questions):
             q_key = f"q{j+1}"
             response = st.select_slider(question, options=options, key=question, value=None)
             st.session_state[q_key] = response
-        st.session_state["name"] = name
-        st.session_state["age"] = age
+        st.session_state["survey"]["name"] = name
+        st.session_state["survey"]["age"] = age
 
         submit_button = st.form_submit_button("Submit", on_click=submit_survey)
 
-survey()
+
 # https://www.truity.com/test/big-five-personality-test
 # kurze Form: https://gosling.psy.utexas.edu/wp-content/uploads/2014/09/JRP-03-tipi.pdf

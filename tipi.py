@@ -68,7 +68,7 @@ def calculate_scores(responses):
 
     # Average scores for each trait
     average_scores = {trait: sum(values) / len(values) for trait, values in scores.items()}
-    print(average_scores)
+
     return average_scores
 
 # calculate_scores(responses2)
