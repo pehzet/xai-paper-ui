@@ -37,20 +37,21 @@ def survey():
         "I see myself as conventional, uncreative."
     ]
     with st.form(key='my_form'):
-        name = st.text_input("Name", value=st.session_state.get("name", ""))
-        age = st.number_input("Age", value=st.session_state.get("age", 18), min_value=0, max_value=100)
+        name = st.text_input("Name", value=st.session_state.get("name", ""), key="name")
+        age = st.number_input("Age", value=st.session_state.get("age", 18), min_value=0, max_value=100, key="age")
 
-        for i, q in enumerate(questions):
-            q_key = f"q{i+1}"
-            if q_key not in st.session_state:
-                st.session_state["survey"][q_key] = options[0] #"Neither agree nor disagree"
+        # for i, q in enumerate(questions):
+        #     q_key = f"q{i+1}"
+        #     if q_key not in st.session_state:
+        #         st.session_state["survey"][q_key] = options[0] #"Neither agree nor disagree"
 
         for j, question in enumerate(questions):
             q_key = f"q{j+1}"
-            response = st.select_slider(question, options=options, key=question, value=None)
-            st.session_state[q_key] = response
-        st.session_state["survey"]["name"] = name
-        st.session_state["survey"]["age"] = age
+            response = st.select_slider(question, options=options, key=q_key, value=None)
+            
+            # st.session_state[q_key] = response
+        # st.session_state["name"] = name
+        # st.session_state["age"] = age
 
         submit_button = st.form_submit_button("Submit", on_click=submit_survey)
 

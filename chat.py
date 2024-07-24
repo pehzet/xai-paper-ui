@@ -2,6 +2,7 @@ import streamlit as st
 from icecream import ic
 def get_assistant_response():
     msg = st.session_state.assistant.messages[-1]
+    ic(msg)
     response = st.session_state.assistant.chat(msg["content"])
     return response
 def chat_page(): 
