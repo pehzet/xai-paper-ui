@@ -166,28 +166,43 @@ class HeartDiseasePredictor:
             print(f"Weight for feature '{feature}' set to {weight}.")
         else:
             print(f"[ERR] Feature '{feature}' not found.")
+
+    def calculate_correlation(self, x1, x2):
+        if x1 in self.train_data.columns and x2 in self.train_data.columns:
+            correlation = self.train_data[x1].corr(self.train_data[x2])
+            print(f"Correlation between {x1} and {x2}: {correlation}")
+            return correlation
+        else:
+            print(f"[ERR] One or both features '{x1}' and '{x2}' not found.")
+            return None
     
 def main(repeat_runs=0):
     predictor = HeartDiseasePredictor()
+
+    # Method Unit tests
+
     times = []
     accuracies = []
     f1_scores = []
 
     if repeat_runs == 1:
+        # Run a normal simulation
         predictor.load_data_from_directory()
         accuracy, f1 = predictor.run_nn_simulation()
-        
-        # Method Unit tests
         
         # Select first dataset and predict
         # first_test_sample = predictor.test_data.iloc[[0]].drop(['disease'], axis=1)
         # y = predictor.predict(first_test_sample)
         # print(f"Prediction for the first test sample: {y[0]} - {predictor.test_data.iloc[[0]]['disease']}")
 
+        # Calculate correlation between two random features
+        x1, x2 = 'age', 'disease'
+        predictor.calculate_correlation(x1, x2)
+
         # Set weight for a specific feature and retrain the model
-        predictor.set_weight('age', 4)
-        predictor.train_nn_model()
-        accuracy, f1 = predictor.run_nn_simulation()
+        # predictor.set_weight('age', 4)
+        # predictor.train_nn_model()
+        # accuracy, f1 = predictor.run_nn_simulation()
     else:
         for _ in range(repeat_runs):
             start_time = time.time()
