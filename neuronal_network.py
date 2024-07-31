@@ -12,7 +12,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, Bidirectional
 from concurrent.futures import ThreadPoolExecutor
 
-REPEAT_RUNS = 5
+REPEAT_RUNS = 1
 
 class HeartDiseasePredictor:
     def __init__(self):
@@ -20,6 +20,11 @@ class HeartDiseasePredictor:
         self.test_data = pd.DataFrame()
         self.nn_model = None
         self.preprocessor = None
+        self.weights = {
+            'age': 1.0, 'sex': 1.0, 'cp': 1.0, 'trestbps': 1.0, 'chol': 1.0,
+            'fbs': 1.0, 'restecg': 1.0, 'thalach': 1.0, 'exang': 1.0,
+            'oldpeak': 1.0, 'slope': 1.0, 'ca': 1.0, 'thal': 1.0
+        }
 
     def load_data_from_directory(self, directory="heart+disease"):
         files = [
@@ -36,7 +41,9 @@ class HeartDiseasePredictor:
                 return None
             try:
                 data = pd.read_csv(file_path, header=None, na_values='?', sep=',')
-                data.columns = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal', 'disease']
+                columns = [*self.weights]
+                columns.append('disease')
+                data.columns = columns
                 
                 for col in data.columns:
                     data[col] = data[col].astype(float)
@@ -75,17 +82,26 @@ class HeartDiseasePredictor:
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         return model
 
-    def preprocess_data(self, data):
+    def preprocess_data(self, data, fit=True):
         categorical_features = ['sex', 'cp', 'fbs', 'restecg', 'exang', 'slope', 'thal']
         numerical_features = ['age', 'trestbps', 'chol', 'thalach', 'oldpeak', 'ca']
 
-        self.preprocessor = ColumnTransformer(
-            transformers=[
-                ('num', StandardScaler(), numerical_features),
-                ('cat', OneHotEncoder(), categorical_features)
-            ])
+        if fit:
+            self.preprocessor = ColumnTransformer(
+                transformers=[
+                    ('num', StandardScaler(), numerical_features),
+                    ('cat', OneHotEncoder(), categorical_features)
+                ])
+            processed_data = self.preprocessor.fit_transform(data)
+        else:
+            processed_data = self.preprocessor.transform(data)
 
-        return self.preprocessor.fit_transform(data)
+        return processed_data
+
+    def weighted_loss(self, y_true, y_pred):
+        weights = tf.constant([self.weights[feature] for feature in self.train_data.columns if feature != 'disease'], dtype=tf.float32)
+        loss = tf.reduce_mean(tf.multiply(weights, tf.square(y_true - y_pred)))
+        return loss
 
     def train_nn_model(self):
         X = self.train_data.drop(['disease'], axis=1)
@@ -100,6 +116,7 @@ class HeartDiseasePredictor:
         ]
 
         self.nn_model = self.build_nn_model((X_processed.shape[1], X_processed.shape[2]), layers_config)
+        self.nn_model.compile(loss=self.weighted_loss, optimizer='adam', metrics=['accuracy'])
         self.nn_model.fit(X_processed, y, epochs=32, batch_size=64, verbose=1, validation_split=0.2)
         self.run_nn_simulation()
 
@@ -114,7 +131,7 @@ class HeartDiseasePredictor:
         X_test = self.test_data.drop(['disease'], axis=1)
         y_test = self.test_data['disease']
 
-        X_test_processed = self.preprocessor.transform(X_test)
+        X_test_processed = self.preprocess_data(X_test, fit=False)
         X_test_processed = np.expand_dims(X_test_processed, axis=1)
 
         y_pred_prob = self.nn_model.predict(X_test_processed)
@@ -133,7 +150,23 @@ class HeartDiseasePredictor:
             print(classification_report(y_test, y_pred))
 
         return accuracy, f1
+    
+    def predict(self, X):
+        X_processed = self.preprocess_data(X, fit=False)
+        X_processed = np.expand_dims(X_processed, axis=1)
 
+        y_prob = self.nn_model.predict(X_processed)
+        y = (y_prob > 0.5).astype(int)
+
+        return y
+    
+    def set_weight(self, feature, weight):
+        if feature in self.weights:
+            self.weights[feature] = weight
+            print(f"Weight for feature '{feature}' set to {weight}.")
+        else:
+            print(f"[ERR] Feature '{feature}' not found.")
+    
 def main(repeat_runs=0):
     predictor = HeartDiseasePredictor()
     times = []
@@ -142,6 +175,18 @@ def main(repeat_runs=0):
 
     if repeat_runs == 1:
         predictor.load_data_from_directory()
+        accuracy, f1 = predictor.run_nn_simulation()
+        
+        # Method Unit tests
+        
+        # Select first dataset and predict
+        # first_test_sample = predictor.test_data.iloc[[0]].drop(['disease'], axis=1)
+        # y = predictor.predict(first_test_sample)
+        # print(f"Prediction for the first test sample: {y[0]} - {predictor.test_data.iloc[[0]]['disease']}")
+
+        # Set weight for a specific feature and retrain the model
+        predictor.set_weight('age', 4)
+        predictor.train_nn_model()
         accuracy, f1 = predictor.run_nn_simulation()
     else:
         for _ in range(repeat_runs):
