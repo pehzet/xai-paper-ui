@@ -9,8 +9,8 @@ from typing import List, Dict
 import sys
 import numpy as np
 from torch import Tensor
-from shap_utils import get_shap_values, get_shap_diagram
-from model_interface import PredictionModel
+from llm_functions import get_shap_values, get_shap_diagram, predict, train_nn_model
+import json
 
 class XAIAssistant:
     def __init__(self, assistant_id = None, instruction_additions:dict = None):
@@ -21,135 +21,16 @@ class XAIAssistant:
         self.client = openai.OpenAI(api_key=OPENAI_API_KEY)
         self.img_ids = self._create_img_ids()
         instructions = self.prepare_instructions(instruction_additions)
-        self.prediction_model = self.load_prediction_model()
+    
         if assistant_id:
             self.assistant = self.client.beta.assistants.retrieve(assistant_id)
             self.update_instructions(instructions)
         else:
-
+            functions_config = self.load_function_config()
             self.assistant = self.client.beta.assistants.create(
             instructions=instructions,
-            model="gpt-4o",
-            tools=[
-                {
-                "type": "function",
-                "function": {
-                    "name": "predict",
-                    "description": "Get the predicted value for a specific input. If the user only provides one of the three inputs, the other two should be set to -99.",
-                    "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "x1": {
-                        "type": "integer",
-                        "description": "Value of the x1 input. Can be between 0 and 100."
-                        },
-                        "x2": {
-                        "type": "integer",
-                        "description": "Value of the x2 input. Can be between 0 and 100."
-                        },
-                        "x3": {
-                        "type": "integer",
-                        "description": "Value of the x1 input. Can be between 0 and 100."
-                        },
-                    },
-                    "required": ["x1", "x2", "x3"]
-                    }
-                }
-                },
-                {
-                "type": "function",
-                "function": {
-                    "name": "explain",
-                    "description": "Get the explaination for a specific input. If the user only provides one of the three inputs, the other two should be set to None. If they are None the previous values will be used",
-                    "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "x1": {
-                        "type": "integer",
-                        "description": "Value of the x1 input. Can be between 0 and 1."
-                        },
-                        "x2": {
-                        "type": "integer",
-                        "description": "Value of the x2 input. Can be between 0 and 1."
-                        },
-                        "x2": {
-                        "type": "integer",
-                        "description": "Value of the x1 input. Can be between 0 and 1."
-                        },
-                    },
-                    "required": ["x1", "x2", "x3"]
-                    }
-                }
-                },
-                {
-                "type": "function",
-                "function": {
-                    "name": "get_shap_values",
-                    "description": "Get SHAP values for the given input data.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "x1": {
-                                "type": "number",
-                                "description": "Value of the first feature input."
-                            },
-                            "x2": {
-                                "type": "number",
-                                "description": "Value of the second feature input."
-                            },
-                            "x3": {
-                                "type": "number",
-                                "description": "Value of the third feature input."
-                            },
-                            "background_data": {
-                                "type": "array",
-                                "items": {
-                                    "type": "array",
-                                    "items": { "type": "number" }
-                                },
-                                "description": "Background data for SHAP calculations. If not provided, the first 100 samples of the model's data are used."
-                            }
-                        },
-                        "required": ["x1", "x2", "x3"]
-                    }
-                }
-            },
-            {
-                "type": "function",
-                "function": {
-                    "name": "get_shap_diagram",
-                    "description": "Get a diagram for the SHAP values.",
-                    "parameters": {
-                        "type": "object",
-                        "properties": {
-                            "x1": {
-                                "type": "number",
-                                "description": "Value of the first feature input."
-                            },
-                            "x2": {
-                                "type": "number",
-                                "description": "Value of the second feature input."
-                            },
-                            "x3": {
-                                "type": "number",
-                                "description": "Value of the third feature input."
-                            },
-                            "plot_type": {
-                                "type": "string",
-                                "enum": ["waterfall", "force"],
-                                "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'."
-                            },
-                            "encode": {
-                                "type": "boolean",
-                                "description": "Whether to encode the plot as a base64 string."
-                            }
-                        },
-                        "required": ["x1", "x2", "x3"]
-                    }
-                }
-            }
-            ]
-    
+            model="gpt-4o-mini",
+            tools=functions_config
             )
         msg_objects = [
                 {
@@ -172,10 +53,7 @@ class XAIAssistant:
             ]
 
         self.thread = self.client.beta.threads.create(
-     
             messages=msg_objects
-                
-            
         )
         self.messages = []
     def _create_img_ids(self):
@@ -193,16 +71,17 @@ class XAIAssistant:
         return img_ids
     def update_instructions(self, instructions):
         self.assistant.instructions = instructions
-        
+    def load_function_config(self):
+        with open("llm_functions_config.json", "r") as f:
+            function_config = json.load(f)
+        return function_config
     def _create_message(self,role,content):
         return self.client.beta.threads.messages.create(
             thread_id=self.thread.id,
             role=role,
             content=content
         )
-    def load_prediction_model(self):
-        # later load from pkl file
-        return PredictionModel()
+
     def _create_run(self):
         #runs last 10 minutes
         return self.client.beta.threads.runs.create_and_poll(
@@ -237,14 +116,7 @@ class XAIAssistant:
         cleaned_text = text.replace("\\(", "").replace("\\)", "")
         return cleaned_text
 
-    def _predict(self, x1, x2, x3):
-        if x1 is None or x1 == -99:
-            x1 = 0.1
-        if x2 is None or x2 == -99:
-            x2 = 0.2
-        if x3 is None or x3 == -99:
-            x3 = 0.3
-        return self.prediction_model.predict(x1, x2, x3)
+
     def tensor_to_list(self, obj):
         if isinstance(obj, Tensor):
             return obj.tolist()
@@ -261,6 +133,7 @@ class XAIAssistant:
         output = self.tensor_to_list(output)
         output = json.dumps(output)
         return output
+
     def get_tool_outputs(self, run):
         # Define the list to store tool outputs
         tool_outputs = []
@@ -268,18 +141,62 @@ class XAIAssistant:
         # Loop through each tool in the required action section
         for tool in run.required_action.submit_tool_outputs.tool_calls:
             args = json.loads(tool.function.arguments)
-
             
             if tool.function.name == "predict":
-                output = self._predict(args["x1"], args["x2"], args["x3"])
-            # elif tool.function.name == "explain":
-            #     output = self.explain(args["x1"], args["x2"], args["x3"])
+                output = predict(
+                    age=args.get("age"),
+                    sex=args.get("sex"),
+                    cp=args.get("cp"),
+                    trestbps=args.get("trestbps"),
+                    chol=args.get("chol"),
+                    fbs=args.get("fbs"),
+                    restecg=args.get("restecg"),
+                    thalach=args.get("thalach"),
+                    exang=args.get("exang"),
+                    oldpeak=args.get("oldpeak"),
+                    slope=args.get("slope"),
+                    ca=args.get("ca"),
+                    thal=args.get("thal")
+                )
             elif tool.function.name == "get_shap_values":
-                output = get_shap_values(args["x1"], args["x2"], args["x3"], args.get("background_data"))
+                output = get_shap_values(
+                    age=args.get("age"),
+                    sex=args.get("sex"),
+                    cp=args.get("cp"),
+                    trestbps=args.get("trestbps"),
+                    chol=args.get("chol"),
+                    fbs=args.get("fbs"),
+                    restecg=args.get("restecg"),
+                    thalach=args.get("thalach"),
+                    exang=args.get("exang"),
+                    oldpeak=args.get("oldpeak"),
+                    slope=args.get("slope"),
+                    ca=args.get("ca"),
+                    thal=args.get("thal")
+                )
             elif tool.function.name == "get_shap_diagram":
-                output = get_shap_diagram(args["x1"], args["x2"], args["x3"], args.get("plot_type", "waterfall"), args.get("encode", True))
+                output = get_shap_diagram(
+                    age=args.get("age"),
+                    sex=args.get("sex"),
+                    cp=args.get("cp"),
+                    trestbps=args.get("trestbps"),
+                    chol=args.get("chol"),
+                    fbs=args.get("fbs"),
+                    restecg=args.get("restecg"),
+                    thalach=args.get("thalach"),
+                    exang=args.get("exang"),
+                    oldpeak=args.get("oldpeak"),
+                    slope=args.get("slope"),
+                    ca=args.get("ca"),
+                    thal=args.get("thal"),
+                    plot_type=args.get("plot_type", "waterfall")
+                )
+            elif tool.function.name == "train_nn_model":
+                layers_config = args.get("layers_config", [])
+                output = train_nn_model(layers_config)
             else:
                 output = None
+
             output = self.serialize_output(output)
 
             tool_outputs.append({
