@@ -12,7 +12,14 @@ from images import show_images
 from decision import decision
 from thanks import thank_you_page
 from tipi import get_description_from_scores
+import os 
+import openai
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 
+if not OPENAI_API_KEY:
+    # from config import OPENAI_API_KEY
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+openai.api_key = OPENAI_API_KEY
 def initialize():
     # set_page_styling()
     # assistant = XAIAssistant()
@@ -23,7 +30,10 @@ def initialize():
             ic("Smoke test detected. Setting assistant to None.")
             st.session_state["assistant"] = None
         else:
-            from config import ASSISTANT_ID
+            ASSISTANT_ID = os.environ.get("ASSISTANT_ID")
+            if not ASSISTANT_ID:
+                # from config import ASSISTANT_ID
+                ASSISTANT_ID = st.secrets["ASSISTANT_ID"]
             st.session_state["assistant"] = XAIAssistant(assistant_id=ASSISTANT_ID)
     st.session_state["user_uuid"] = user_uuid
     st.session_state["start_time"] = start_time

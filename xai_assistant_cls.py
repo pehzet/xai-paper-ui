@@ -1,7 +1,8 @@
 import openai
 # from openai.types import *
 import base64
-from config import OPENAI_API_KEY
+# from config import OPENAI_API_KEY
+import os
 from icecream import ic
 import time
 import json
@@ -12,13 +13,15 @@ from torch import Tensor
 from llm_functions import get_shap_values, get_shap_diagram, predict, train_nn_model
 import json
 
+
 class XAIAssistant:
     def __init__(self, assistant_id = None, instruction_additions:dict = None):
         '''
         Initializes the XAIAssistant object. If an assistant_id is provided, the assistant with that id is retrieved. Otherwise, a new assistant is created.
         '''
-        ic("DEBUG: ASSISTANT CALLED")
-        self.client = openai.OpenAI(api_key=OPENAI_API_KEY)
+
+        self.client = openai.OpenAI()
+
         self.img_ids = self._create_img_ids()
         instructions = self.prepare_instructions(instruction_additions)
     
