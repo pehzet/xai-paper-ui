@@ -6,3 +6,4 @@ pandas
 streamlit
 tensorflow
 shap
+matplotlib
