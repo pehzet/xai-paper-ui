@@ -78,8 +78,7 @@ def calculate_scores(responses):
 
 
 def get_description_from_scores(scores):
-    from config import OPENAI_API_KEY
-    client = OpenAI(api_key=OPENAI_API_KEY)
+    client = OpenAI()
 
     response = client.chat.completions.create(
     model="gpt-4o-mini",
