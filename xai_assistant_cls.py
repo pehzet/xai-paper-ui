@@ -60,10 +60,11 @@ class XAIAssistant:
         )
         self.messages = []
     def _create_img_ids(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
         img_paths = [
-                r"images\image_1.png",
-                r"images\image_2.png"
-            ]
+            os.path.join(base_dir, "images", "image_1.png"),
+            os.path.join(base_dir, "images", "image_2.png")
+        ]
         img_ids = []
         for img_path in img_paths:
             img = (self.client.files.create(
