@@ -103,17 +103,17 @@ class HeartDiseasePredictor:
         loss = tf.reduce_mean(tf.multiply(weights, tf.square(y_true - y_pred)))
         return loss
 
-    def train_nn_model(self):
+    def train_nn_model(self, layers_config=None):
         X = self.train_data.drop(['disease'], axis=1)
         y = self.train_data['disease']
 
         X_processed = self.preprocess_data(X)
         X_processed = np.expand_dims(X_processed, axis=1)
-
-        layers_config = [
-            {'units': 64, 'activation': 'relu', 'dropout': 0.2},
-            {'units': 32, 'activation': 'relu'}
-        ]
+        if layers_config is None:
+            layers_config = [
+                {'units': 64, 'activation': 'relu', 'dropout': 0.2},
+                {'units': 32, 'activation': 'relu'}
+            ]
 
         self.nn_model = self.build_nn_model((X_processed.shape[1], X_processed.shape[2]), layers_config)
         self.nn_model.compile(loss=self.weighted_loss, optimizer='adam', metrics=['accuracy'])
