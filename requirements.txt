@@ -5,5 +5,4 @@ numpy
 pandas
 streamlit
 tensorflow
-sklearn
 shap
