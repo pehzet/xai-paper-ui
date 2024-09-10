@@ -225,14 +225,17 @@ class XAIAssistant:
         
 
     def chat(self,msg):
+        start = time.time()
+   
         message = self._create_message("user", msg)
+
         run = self._create_run()
 
         while not run.status == 'completed':
-
+            
             if run.status == 'requires_action':
                 tool_outputs = self.get_tool_outputs(run)
-
+ 
                 if tool_outputs:
                     try:
                         run = self.client.beta.threads.runs.submit_tool_outputs_and_poll(
@@ -244,12 +247,13 @@ class XAIAssistant:
                     except Exception as e:
                         print("Failed to submit tool outputs:", e)
                         sys.exit(1)
+        
                 else:
                     print("No tool outputs to submit.")
             else:
-                time.sleep(1)
+                time.sleep(0.1)
                 print(run.status)
-
+    
 
         return self._handle_run_completed(run)
     def get_instructions(self):
