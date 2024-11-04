@@ -1,0 +1,111 @@
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "predict",
+            "description": "Predicts heart disease based on input features.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "age": {"type": "integer", "description": "Age of the person."},
+                    "sex": {"type": "integer", "description": "Sex of the person (0 = female, 1 = male)."},
+                    "cp": {"type": "integer", "description": "Chest pain type (0 to 3)."},
+                    "trestbps": {"type": "integer", "description": "Resting blood pressure (in mm Hg)."},
+                    "chol": {"type": "integer", "description": "Serum cholesterol in mg/dl."},
+                    "fbs": {"type": "integer", "description": "Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)."},
+                    "restecg": {"type": "integer", "description": "Resting electrocardiographic results (0 to 2)."},
+                    "thalach": {"type": "integer", "description": "Maximum heart rate achieved."},
+                    "exang": {"type": "integer", "description": "Exercise induced angina (1 = yes; 0 = no)."},
+                    "oldpeak": {"type": "number", "description": "ST depression induced by exercise relative to rest."},
+                    "slope": {"type": "integer", "description": "Slope of the peak exercise ST segment (0 to 2)."},
+                    "ca": {"type": "integer", "description": "Number of major vessels (0-3) colored by fluoroscopy."},
+                    "thal": {"type": "integer", "description": "Thalassemia (1 = normal; 2 = fixed defect; 3 = reversable defect)."}
+                },
+                "required": ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "train_nn_model",
+            "description": "Trains a neural network model with the specified layer configuration.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "layers_config": {
+                        "type": "array",
+                        "description": "List of layer configurations.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "units": {"type": "integer", "description": "Number of units in the layer."},
+                                "activation": {"type": "string", "description": "Activation function used in the layer."},
+                                "dropout": {"type": "number", "description": "Dropout rate, between 0 and 1."}
+                            },
+                            "required": ["units", "activation"]
+                        }
+                    }
+                },
+                "required": ["layers_config"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_shap_values",
+            "description": "Get SHAP values for the given input data.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "age": {"type": "integer", "description": "Age of the person."},
+                    "sex": {"type": "integer", "description": "Sex of the person (0 = female, 1 = male)."},
+                    "cp": {"type": "integer", "description": "Chest pain type (0 to 3)."},
+                    "trestbps": {"type": "integer", "description": "Resting blood pressure (in mm Hg)."},
+                    "chol": {"type": "integer", "description": "Serum cholesterol in mg/dl."},
+                    "fbs": {"type": "integer", "description": "Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)."},
+                    "restecg": {"type": "integer", "description": "Resting electrocardiographic results (0 to 2)."},
+                    "thalach": {"type": "integer", "description": "Maximum heart rate achieved."},
+                    "exang": {"type": "integer", "description": "Exercise induced angina (1 = yes; 0 = no)."},
+                    "oldpeak": {"type": "number", "description": "ST depression induced by exercise relative to rest."},
+                    "slope": {"type": "integer", "description": "Slope of the peak exercise ST segment (0 to 2)."},
+                    "ca": {"type": "integer", "description": "Number of major vessels (0-3) colored by fluoroscopy."},
+                    "thal": {"type": "integer", "description": "Thalassemia (1 = normal; 2 = fixed defect; 3 = reversable defect)."}
+                },
+                "required": ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_shap_diagram",
+            "description": "Get a diagram for the SHAP values.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "age": {"type": "integer", "description": "Age of the person."},
+                    "sex": {"type": "integer", "description": "Sex of the person (0 = female, 1 = male)."},
+                    "cp": {"type": "integer", "description": "Chest pain type (0 to 3)."},
+                    "trestbps": {"type": "integer", "description": "Resting blood pressure (in mm Hg)."},
+                    "chol": {"type": "integer", "description": "Serum cholesterol in mg/dl."},
+                    "fbs": {"type": "integer", "description": "Fasting blood sugar > 120 mg/dl (1 = true; 0 = false)."},
+                    "restecg": {"type": "integer", "description": "Resting electrocardiographic results (0 to 2)."},
+                    "thalach": {"type": "integer", "description": "Maximum heart rate achieved."},
+                    "exang": {"type": "integer", "description": "Exercise induced angina (1 = yes; 0 = no)."},
+                    "oldpeak": {"type": "number", "description": "ST depression induced by exercise relative to rest."},
+                    "slope": {"type": "integer", "description": "Slope of the peak exercise ST segment (0 to 2)."},
+                    "ca": {"type": "integer", "description": "Number of major vessels (0-3) colored by fluoroscopy."},
+                    "thal": {"type": "integer", "description": "Thalassemia (1 = normal; 2 = fixed defect; 3 = reversable defect)."},
+                    "plot_type": {
+                        "type": "string",
+                        "enum": ["waterfall", "force"],
+                        "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'."
+                    }
+                },
+                "required": ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal", "plot_type"]
+            }
+        }
+    }
+]
