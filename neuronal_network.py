@@ -20,7 +20,7 @@ class CropPredictor:
         """
         Initializes the CropPredictor instance.
 
-        Sets up data structures, initializes feature weights, loads data,
+        Sets up data structures, initializes feature loads data,
         trains the initial model, and runs the initial simulation.
         """
         self.train_data = None
@@ -29,19 +29,16 @@ class CropPredictor:
         self.y_train = None
         self.X_test = None
         self.y_test = None
-        self.nn_model = None
-        self.models = []
+        self.model = None
         self.preprocessor = None
         self.label_encoder = None
         self.num_classes = None
 
         self.numerical_features = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
 
-        self.weights = {feature: 1.0 for feature in self.numerical_features}
-
         self.load_data()
-        self.train_nn_model()
-        self.run_nn_simulation()
+        self.train_model()
+        self.run_simulation()
 
     def load_data(self, filepath=r'xai-paper-ui\data\Crop_recommendation.csv'):
         """
@@ -63,7 +60,7 @@ class CropPredictor:
             self.num_classes = len(self.label_encoder.classes_)
 
             self.train_data, self.test_data = train_test_split(
-                data, test_size=0.6, random_state=42, stratify=data['label']
+                data, test_size=0.5, random_state=42, stratify=data['label']
             )
 
             self.X_train = self.train_data[self.numerical_features].values
@@ -83,7 +80,7 @@ class CropPredictor:
         - fit (bool, optional): Whether to fit the scaler to the data. Default is True.
 
         Returns:
-        - processed_data (numpy.ndarray): The preprocessed data.
+        - X_scaled (numpy.ndarray): The preprocessed data.
         """
         if fit:
             self.scaler = StandardScaler()
@@ -91,12 +88,9 @@ class CropPredictor:
         else:
             X_scaled = self.scaler.transform(X)
 
-        weight_vector = np.array([self.weights.get(name, 1.0) for name in self.numerical_features])
-        processed_data = X_scaled * weight_vector
+        return X_scaled
 
-        return processed_data
-
-    def build_nn_model(self, input_dim, num_classes):
+    def build_model(self, input_dim, num_classes):
         """
         Builds and compiles a neural network model.
 
@@ -120,7 +114,7 @@ class CropPredictor:
         model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
         return model
 
-    def train_nn_model(self):
+    def train_model(self):
         """
         Trains the neural network model using the training data.
 
@@ -131,44 +125,42 @@ class CropPredictor:
         input_dim = X_processed.shape[1]
         num_classes = self.num_classes
 
-        model = self.build_nn_model(input_dim, num_classes)
+        model = self.build_model(input_dim, num_classes)
         early_stopping = tf.keras.callbacks.EarlyStopping(
             monitor='val_loss', patience=5, restore_best_weights=True
         )
         model.fit(
-            X_processed, self.y_train, epochs=8, batch_size=64, verbose=0,
+            X_processed, self.y_train, epochs=10, batch_size=64, verbose=0,
             validation_split=0.2, callbacks=[early_stopping]
         )
 
-        self.models.append(model)
-        self.nn_model = model
+        self.model = model
 
-    def run_nn_simulation(self):
+    def run_simulation(self):
         """
         Evaluates the current neural network model on the test dataset and prints the classification report.
 
         Returns:
         - None
         """
-        if self.nn_model is None:
+        if self.model is None:
             print("[ERR] The neural network is not trained. Please train it first.")
             return
 
         X_test_processed = self.preprocess_data(self.X_test, fit=False)
 
-        y_pred_prob = self.nn_model.predict(X_test_processed, verbose=0)
+        y_pred_prob = self.model.predict(X_test_processed, verbose=0)
         y_pred = np.argmax(y_pred_prob, axis=1)
 
         print("Simulation Result:")
         print(classification_report(self.y_test, y_pred, target_names=self.label_encoder.classes_))
 
-    def predict(self, X, model_index=None):
+    def predict(self, X):
         """
         Predicts the class for the given input data.
 
         Parameters:
         - X (numpy.ndarray or pandas.DataFrame): The input data for prediction.
-        - model_index (int, optional): Index of the model to use from the models list. If None, uses the latest model.
 
         Returns:
         - y (numpy.ndarray): The predicted class labels.
@@ -182,36 +174,11 @@ class CropPredictor:
         if X_processed.ndim == 1:
             X_processed = X_processed.reshape(1, -1)
 
-        if model_index is not None and 0 <= model_index < len(self.models):
-            model = self.models[model_index]
-        else:
-            model = self.nn_model
-
-        y_prob = model.predict(X_processed, verbose=0)
+        y_prob = self.model.predict(X_processed, verbose=0)
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
 
-    def set_weight(self, feature, weight):
-        """
-        Sets the weight for a specific feature and retrains the neural network model.
-
-        Parameters:
-        - feature (str): The name of the feature to adjust the weight.
-        - weight (float): The new weight value for the feature.
-
-        Returns:
-        - None
-        """
-        if feature in self.weights:
-            self.weights[feature] = weight
-            print(f"Weight for feature '{feature}' set to {weight}.")
-            self.train_nn_model()
-            self.run_nn_simulation()
-        else:
-            print(f"[ERR] Feature '{feature}' not found.")
-
 def main():
-    start_time = time.time()
     predictor = CropPredictor()
 
     # Example usage:
@@ -219,8 +186,6 @@ def main():
     # sample_input = predictor.test_data.iloc[[0]]
     # prediction = predictor.predict(sample_input)
     # print(f"Prediction: {prediction[0]}")
-
-    print(f"Execution time: {time.time() - start_time:.4f} seconds")
 
 if __name__ == "__main__":
     main()
