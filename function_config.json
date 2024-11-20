@@ -1,0 +1,70 @@
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "predict",
+            "description": "Predicts crops based on the characteristics entered.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
+                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
+                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
+                    "temperature": {"type": "integer", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "integer", "description": "Relative humidity in %."},
+                    "ph": {"type": "integer", "description": "PH value of the soil."},
+                    "rainfall": {"type": "integer", "description": "rainfall in mm."},
+                    "label": {"type": "string", "description": "Type of classified crops."}
+                },
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_shap_values",
+            "description": "Get SHAP values for the given input data.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
+                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
+                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
+                    "temperature": {"type": "integer", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "integer", "description": "Relative humidity in %."},
+                    "ph": {"type": "integer", "description": "PH value of the soil."},
+                    "rainfall": {"type": "integer", "description": "rainfall in mm."},
+                    "label": {"type": "string", "description": "Type of classified crops."}
+                },
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_shap_diagram",
+            "description": "Get a diagram for the SHAP values.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
+                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
+                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
+                    "temperature": {"type": "integer", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "integer", "description": "Relative humidity in %."},
+                    "ph": {"type": "integer", "description": "PH value of the soil."},
+                    "rainfall": {"type": "integer", "description": "rainfall in mm."},
+                    "label": {"type": "string", "description": "Type of classified crops."},
+                    "plot_type": {
+                        "type": "string",
+                        "enum": ["waterfall", "force"],
+                        "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'."
+                    }
+                },
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label"]
+            }
+        }
+    }
+]
