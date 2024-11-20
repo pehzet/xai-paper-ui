@@ -10,13 +10,12 @@
                     "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
                     "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
                     "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "integer", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "integer", "description": "Relative humidity in %."},
-                    "ph": {"type": "integer", "description": "PH value of the soil."},
-                    "rainfall": {"type": "integer", "description": "rainfall in mm."},
-                    "label": {"type": "string", "description": "Type of classified crops."}
+                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "number", "description": "Relative humidity in %."},
+                    "ph": {"type": "number", "description": "PH value of the soil."},
+                    "rainfall": {"type": "number", "description": "rainfall in mm."}
                 },
-                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label"]
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
             }
         }
     },
@@ -31,10 +30,10 @@
                     "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
                     "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
                     "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "integer", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "integer", "description": "Relative humidity in %."},
-                    "ph": {"type": "integer", "description": "PH value of the soil."},
-                    "rainfall": {"type": "integer", "description": "rainfall in mm."},
+                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "number", "description": "Relative humidity in %."},
+                    "ph": {"type": "number", "description": "PH value of the soil."},
+                    "rainfall": {"type": "number", "description": "rainfall in mm."},
                     "label": {"type": "string", "description": "Type of classified crops."}
                 },
                 "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label"]
@@ -52,10 +51,10 @@
                     "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
                     "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
                     "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "integer", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "integer", "description": "Relative humidity in %."},
-                    "ph": {"type": "integer", "description": "PH value of the soil."},
-                    "rainfall": {"type": "integer", "description": "rainfall in mm."},
+                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "number", "description": "Relative humidity in %."},
+                    "ph": {"type": "number", "description": "PH value of the soil."},
+                    "rainfall": {"type": "number", "description": "rainfall in mm."},
                     "label": {"type": "string", "description": "Type of classified crops."},
                     "plot_type": {
                         "type": "string",
@@ -63,7 +62,7 @@
                         "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'."
                     }
                 },
-                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label"]
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall", "label", "plot_type"]
             }
         }
     }

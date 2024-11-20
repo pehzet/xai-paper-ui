@@ -38,9 +38,9 @@ class CropPredictor:
 
         self.load_data()
         self.train_model()
-        self.run_simulation()
+        # self.run_simulation()
 
-    def load_data(self, filepath=r'xai-paper-ui\data\Crop_recommendation.csv'):
+    def load_data(self, filepath=r'data\Crop_recommendation.csv'):
         """
         Loads and preprocesses the dataset from the given CSV file.
 
@@ -155,37 +155,28 @@ class CropPredictor:
         print("Simulation Result:")
         print(classification_report(self.y_test, y_pred, target_names=self.label_encoder.classes_))
 
-    def predict(self, X):
+    def predict(self, N, P, K, temperature, humidity, ph, rainfall):
         """
         Predicts the class for the given input data.
 
         Parameters:
-        - X (numpy.ndarray or pandas.DataFrame): The input data for prediction.
+        - Each feature from dataset
 
         Returns:
         - y (numpy.ndarray): The predicted class labels.
         """
-        if isinstance(X, pd.DataFrame):
-            X = X[self.numerical_features].values
-        else:
-            X = np.array(X)
+        X = np.array([N, P, K, temperature, humidity, ph, rainfall]).reshape(1, -1)
 
         X_processed = self.preprocess_data(X, fit=False)
-        if X_processed.ndim == 1:
-            X_processed = X_processed.reshape(1, -1)
 
         y_prob = self.model.predict(X_processed, verbose=0)
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
 
-def main():
-    predictor = CropPredictor()
+# def main():
+#     predictor = CropPredictor()
+#     y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
+#     print(y)
 
-    # Example usage:
-    # predictor.set_weight('N', 1.5)
-    # sample_input = predictor.test_data.iloc[[0]]
-    # prediction = predictor.predict(sample_input)
-    # print(f"Prediction: {prediction[0]}")
-
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
