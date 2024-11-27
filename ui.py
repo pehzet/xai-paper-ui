@@ -7,7 +7,8 @@ from pages.chat_page import chat_page
 from chatbot import XAIChatbot
 
 def init():
-    st.session_state.assistant = XAIChatbot()
+    if not "assistant" in st.session_state:
+        st.session_state.assistant = XAIChatbot()
     title = "XAI Paper"
     st.set_page_config(
         page_title=title,

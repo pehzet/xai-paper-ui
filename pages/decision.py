@@ -8,9 +8,9 @@ def decision():
     # Check if 'button_clicked' is in session_state, if not, initialize it to None
     if 'choice' not in st.session_state:
         st.session_state["choice"] = None
-    options = ["Bitte wählen", "Corn", "Wheat", "Rice", "Soybean"]
+    options = ['rice', 'Soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
     # Create buttons in each column
-    decision = st.selectbox("What Crop is it?",options)
+    decision = st.selectbox("Was würdest du aussäen?",options, placeholder="Bitte wählen", index=None)
     submit = st.button("Submit")
     if submit:
         st.session_state["choice"] = decision

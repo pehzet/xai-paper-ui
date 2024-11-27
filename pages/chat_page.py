@@ -7,36 +7,70 @@ from io import BytesIO
 
 def render_image(base64_string=None):
     if not base64_string:
-        with open("base64_img_test.txt", "r") as f:
-            base64_string = f.read()
+        return None
     img_data = base64.b64decode(base64_string)
     img = Image.open(BytesIO(img_data))
     return img
 def get_assistant_response(msg):
-    response = st.session_state.assistant.chat(msg)
+    response, img = st.session_state.assistant.chat(msg)
     # response = st.session_state.assistant.chat(msg["content"])
-    img = render_image(None)
+    # img = render_image(None)
     return response, img
 def get_messages():
-    msgs = [msg for msg in st.session_state.assistant.messages[2:] if msg["role"] in ["user","assistant"]]
-    # msgs = [{"role": "assistant", "content":"WOLOLO" },{"role": "user", "content":"AAAAH"}, {"role": "assistant", "content":"WOLOLO" }]
-    return msgs
+    # TODO MESSAGES ARE EMPTY - FIX
+    messages = st.session_state.assistant.get_messages()
+
+    extracted_messages = []
+
+    for message in messages[2:]:
+        role = message['role']
+        if role == 'system':
+            continue
+        content = message['content']
+        is_img = False
+
+        # Check if the message contains a tool call
+        if 'tool_calls' in message and message['tool_calls']:
+            for tool_call in message['tool_calls']:
+                if tool_call['function']['name'] == 'generate_shap_diagram':
+                    is_img = True
+                    content = message['content']  # Retain the original base64 image content
+
+        extracted_messages.append({
+            "role": role,
+            "content": content,
+            "is_img": is_img
+        })
+
+    return extracted_messages
+
+
+
 def chat_page(): 
 
     msgs = get_messages()
+    ic(msgs)
     for msg in msgs:
         with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+            if msg["is_img"]:
+                img = render_image(msg["content"])
+                st.image(img)
+            else:
+                st.markdown(msg["content"])
     
     if prompt := st.chat_input("Wie kann ich helfen?"):
    
         with st.chat_message("user"):
             st.markdown(prompt)
 
+
         with st.spinner("Bin gleich wieder da..."):
-            response, img = get_assistant_response(prompt)
+            response, img_base64 = get_assistant_response(prompt)
         # Display assistant's response in chat message container
         with st.chat_message("assistant"):
             st.markdown(response)
-            if img:
+           
+            if img_base64:
+                img = render_image(img_base64)
                 st.image(img)
+            

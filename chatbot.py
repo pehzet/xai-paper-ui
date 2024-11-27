@@ -5,6 +5,8 @@ import os
 import base64
 import sys
 from icecream import ic
+from prediction_model.model_interface import predict
+from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 class XAIChatbot:
     def __init__(self):
         
@@ -14,6 +16,7 @@ class XAIChatbot:
         self.messages.append(self.create_instruction_message())
         self.messages.append(self.create_img_message())
         self.function_config = self.load_function_config()
+        self._tool_call_id_with_image = None
     def encode_image(self, image_path):
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
@@ -22,12 +25,14 @@ class XAIChatbot:
             function_config = json.load(f)
         return function_config
     def create_instruction_message(self):
-        with open("instructions.txt", "r") as f:
+        with open("instructions.txt", "r", encoding="utf-8") as f:
             message = f.read()
         return {
             "role": "system",
             "content": message
         }
+    def get_messages(self):
+        return self.messages
     def create_img_message(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
         image1_path = os.path.join(base_dir, "images", "global_explanation.png")
@@ -64,10 +69,14 @@ class XAIChatbot:
     def handle_tool_calls(self, tool_calls):
         tool_outputs = []
         for tool_call in tool_calls:
-            if tool_call.function.name == "get_shap_diagram":
-                output = self.dummy_function_image()
-            elif tool_call.function.name == "get_shap_values":
-                output = self.dummy_function_values()
+            if tool_call.function.name == "predict":
+                output = predict(tool_call.function.arguments)
+            elif tool_call.function.name == "generate_shap_diagram":
+                output = generate_shap_diagram(tool_call.function.arguments)
+                output = output.get("shap_diagram")
+                self._tool_call_id_with_image = tool_call.id
+            # elif tool_call.function.name == "predict_shap_values":
+            #     output = predict_shap_values(tool_call.function.arguments)
             tool_outputs.append({
                 "tool_call_id": tool_call.id,
                 "output": output
@@ -82,44 +91,58 @@ class XAIChatbot:
                 "tool_call_id": output["tool_call_id"]
 
             })
-        ic(msgs)
+
         return msgs
     def get_completion(self):
+        print("Creating completion")
         return self.client.chat.completions.create(
             model=self.model,
             messages=self.messages,
             tools=self.function_config
         )
-    
+    def add_tool_call_prior_response_to_messages(self, response):
+        tool_call_array = []
+        for tool_call in response.tool_calls:
+            tool_call_array.append({
+                "id": tool_call.id,
+                "type": tool_call.type,
+                "function": {
+                    "name": tool_call.function.name,
+                    "arguments": tool_call.function.arguments
+                }
+            })
+        obj = {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": tool_call_array
+            }
+        self.messages.append(obj)
     def chat(self,msg):
-        ic(msg)
         message = self._create_message("user", msg)
         self.messages.append(message)
         completion = self.get_completion()
-        ic(completion)
         response = completion.choices[0].message
-        
+        ic(response)
+        image = None
         if response.tool_calls:
+            self.add_tool_call_prior_response_to_messages(response)
             tool_outputs = self.handle_tool_calls(response.tool_calls)
-            ic(tool_outputs)
             tool_msgs = self.create_tool_messages(tool_outputs)
-            ic(response)
-            self.messages.append(response)
+            # self.messages.append(response)
             for tool_msg in tool_msgs:
+                
                 self.messages.append(tool_msg)
+                if tool_msg["tool_call_id"] == self._tool_call_id_with_image:
+                    image = tool_msg["content"]
+                    self._tool_call_id_with_image = None
+
+            # ic(self.messages[2].content[0])
             completion = self.get_completion()
+            ic(completion)
             response = completion.choices[0].message
 
-
+       
         response_oai = self._create_message("assistant", response.content)
         self.messages.append(response_oai)
-        return response.content
-
-    def dummy_function_image(self):
-        pth = os.path.join("images", "global_explanation.png")
-        img = self.encode_image(pth)
-        return img
-    def dummy_function_values(self):
-        features = ["age", "sex", "cp", "trestbps", "chol", "fbs", "restecg", "thalach", "exang", "oldpeak", "slope", "ca", "thal"]
-        values = [63, 1, 3, 145, 233, 1, 0, 150, 0, 2.3, 0, 0, 1]
-        return dict(zip(features, values))
+        # ic(self.messages)
+        return response.content, image
