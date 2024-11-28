@@ -8,8 +8,10 @@ from sklearn.metrics import classification_report
 import numpy as np
 import time
 import tensorflow as tf
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Dropout
+
+FORCE_TRAIN = 0
 
 class CropPredictor:
     """
@@ -36,9 +38,17 @@ class CropPredictor:
 
         self.numerical_features = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
 
+        self.model_path = r'prediction_model\model\nn_model.h5'
+
         self.load_data()
-        self.train_model()
-        # self.run_simulation()
+        if not os.path.exists(self.model_path) or FORCE_TRAIN == 1:
+            self.train_model()
+            self.save_model()
+        else:
+            self.model = load_model(self.model_path)
+            self.initialize_scaler()
+
+        self.run_simulation()
 
     def load_data(self, filepath=r'data\Crop_recommendation.csv'):
         """
@@ -51,7 +61,6 @@ class CropPredictor:
         - None
         """
         try:
-            import os
             filepath = os.path.join(os.path.dirname(__file__), filepath)
             data = pd.read_csv(filepath)
 
@@ -141,6 +150,24 @@ class CropPredictor:
 
         self.model = model
 
+    def save_model(self):
+        """
+        Saves the trained model to a file.
+        """
+        try:
+            self.model.save(self.model_path)
+            print(f"[INFO] Model saved to {self.model_path}")
+        except Exception as e:
+            print(f"[ERR] Error saving model: {e}")
+
+    def initialize_scaler(self):
+        """
+        Initializes the scaler using the training data.
+        """
+        self.scaler = StandardScaler()
+        self.scaler.fit(self.X_train)  # Fit scaler on training data
+        print("[INFO] Scaler initialized.")
+
     def run_simulation(self):
         """
         Evaluates the current neural network model on the test dataset and prints the classification report.
@@ -178,10 +205,10 @@ class CropPredictor:
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
 
-def main():
-    predictor = CropPredictor()
-    y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
-    print(y)
+# def main():
+#     predictor = CropPredictor()
+#     y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
+#     print(y)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
