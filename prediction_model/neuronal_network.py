@@ -38,17 +38,17 @@ class CropPredictor:
 
         self.numerical_features = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
 
-        self.model_path = r'prediction_model\model\nn_model.h5'
+        self.model_path = r'prediction_model\model\nn_model.keras'
 
         self.load_data()
-        if not os.path.exists(self.model_path) or FORCE_TRAIN == 1:
+        if not os.path.exists(self.model_path) or FORCE_TRAIN:
             self.train_model()
             self.save_model()
         else:
-            self.model = load_model(self.model_path)
+            self.model = tf.keras.models.load_model(self.model_path)
             self.initialize_scaler()
 
-        self.run_simulation()
+        # self.run_simulation()
 
     def load_data(self, filepath=r'data\Crop_recommendation.csv'):
         """
@@ -155,6 +155,7 @@ class CropPredictor:
         Saves the trained model to a file.
         """
         try:
+            os.makedirs(os.path.dirname(self.model_path), exist_ok=True)
             self.model.save(self.model_path)
             print(f"[INFO] Model saved to {self.model_path}")
         except Exception as e:
@@ -205,10 +206,10 @@ class CropPredictor:
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
 
-# def main():
-#     predictor = CropPredictor()
-#     y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
-#     print(y)
+def main():
+    predictor = CropPredictor()
+    y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
+    print(y)
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
