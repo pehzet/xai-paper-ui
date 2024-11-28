@@ -206,10 +206,10 @@ class CropPredictor:
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
 
-def main():
-    predictor = CropPredictor()
-    y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
-    print(y)
+# def main():
+#     predictor = CropPredictor()
+#     y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
+#     print(y)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
