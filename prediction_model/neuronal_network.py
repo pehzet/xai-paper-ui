@@ -206,6 +206,147 @@ class CropPredictor:
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
 
+    def sum_feature(self, feature, by_class=False):
+        """
+        Calculates the sum of a feature across the entire dataset or grouped by class.
+
+        Parameters:
+        - feature (str): Name of the feature.
+        - by_class (bool): If True, calculates the sum grouped by class.
+
+        Returns:
+        - sum (float or dict): Total sum or sum per class.
+        """
+        if by_class:
+            return self.train_data.groupby('label')[feature].sum().to_dict()
+        return self.train_data[feature].sum()
+    
+    def mean_feature(self, feature, by_class=False):
+        """
+        Calculates the mean of a feature across the entire dataset or grouped by class.
+
+        Parameters:
+        - feature (str): Name of the feature.
+        - by_class (bool): If True, calculates the mean grouped by class.
+
+        Returns:
+        - mean (float or dict): Overall mean or mean per class.
+        """
+        if by_class:
+            return self.train_data.groupby('label')[feature].mean().to_dict()
+        return self.train_data[feature].mean()
+    
+    def quantile_feature(self, feature, quantiles=[0.25, 0.5, 0.75]):
+        """
+        Calculates specified quantiles of a feature.
+
+        Parameters:
+        - feature (str): Name of the feature.
+        - quantiles (list): List of desired quantiles.
+
+        Returns:
+        - result (dict): Dictionary of quantiles and their values.
+        """
+        return self.train_data[feature].quantile(quantiles).to_dict()
+    
+    def variance_feature(self, feature):
+        """
+        Calculates the variance of a feature.
+
+        Parameters:
+        - feature (str): Name of the feature.
+
+        Returns:
+        - variance (float): Variance of the feature.
+        """
+        return self.train_data[feature].var()
+
+    def std_feature(self, feature):
+        """
+        Calculates the standard deviation of a feature.
+
+        Parameters:
+        - feature (str): Name of the feature.
+
+        Returns:
+        - std (float): Standard deviation of the feature.
+        """
+        return self.train_data[feature].std()
+    
+    def min_feature(self, feature):
+        """
+        Returns the minimum value of a feature.
+
+        Parameters:
+        - feature (str): Name of the feature.
+
+        Returns:
+        - min_value (float): Minimum value of the feature.
+        """
+        return self.train_data[feature].min()
+
+    def max_feature(self, feature):
+        """
+        Returns the maximum value of a feature.
+
+        Parameters:
+        - feature (str): Name of the feature.
+
+        Returns:
+        - max_value (float): Maximum value of the feature.
+        """
+        return self.train_data[feature].max()
+    
+    def correlation(self, feature1, feature2):
+        """
+        Calculates the correlation coefficient between two features.
+
+        Parameters:
+        - feature1 (str): Name of the first feature.
+        - feature2 (str): Name of the second feature.
+
+        Returns:
+        - correlation (float): Correlation coefficient between the two features.
+        """
+        return self.train_data[[feature1, feature2]].corr().iloc[0, 1]
+    
+    def class_distribution(self):
+        """
+        Returns the frequency of each class in the dataset.
+
+        Returns:
+        - distribution (dict): Dictionary with class labels and their frequencies.
+        """
+        return self.train_data['label'].value_counts().to_dict()
+    
+    def feature_values_for_class(self, feature, class_label):
+        """
+        Returns the values of a feature for a specific class.
+
+        Parameters:
+        - feature (str): Name of the feature.
+        - class_label (str or int): Name or index of the class.
+
+        Returns:
+        - values (list): List of feature values for the given class.
+        """
+        class_index = self.label_encoder.transform([class_label])[0]
+        return self.train_data[self.train_data['label'] == class_index][feature].tolist()
+    
+    def feature_distribution(self, feature, bins=10):
+        """
+        Returns the histogram distribution of a feature.
+
+        Parameters:
+        - feature (str): Name of the feature.
+        - bins (int): Number of bins for the histogram.
+
+        Returns:
+        - hist (dict): Dictionary with bin edges and counts.
+        """
+        counts, bin_edges = np.histogram(self.train_data[feature], bins=bins)
+        return dict(zip(bin_edges, counts))
+
 # def main():
 #     predictor = CropPredictor()
 #     y = predictor.predict(2, 5, 12, 5.2, 2.3, 1.1, 12.5)
