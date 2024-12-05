@@ -268,5 +268,17 @@
                 "required": ["feature"]
             }
         }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_simulation",
+            "description": "Run a simulation and returns a report of accuracy of classification.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
     }
 ]

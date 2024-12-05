@@ -185,8 +185,7 @@ class CropPredictor:
         y_pred_prob = self.model.predict(X_test_processed, verbose=0)
         y_pred = np.argmax(y_pred_prob, axis=1)
 
-        print("Simulation Result:")
-        print(classification_report(self.y_test, y_pred, target_names=self.label_encoder.classes_))
+        return classification_report(self.y_test, y_pred, target_names=self.label_encoder.classes_)
 
     def predict(self, N, P, K, temperature, humidity, ph, rainfall):
         """
