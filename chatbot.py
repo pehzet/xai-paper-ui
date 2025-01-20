@@ -5,10 +5,10 @@ import os
 import base64
 import sys
 from icecream import ic
-from prediction_model.model_interface import predict
+from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation
 from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 class XAIChatbot:
-    def __init__(self):
+    def __init__(self, decision_no=None):
         
         self.client = OpenAI(api_key=config.OPENAI_API_KEY)
         self.model = config.MODEL
@@ -17,6 +17,12 @@ class XAIChatbot:
         self.messages.append(self.create_img_message())
         self.function_config = self.load_function_config()
         self._tool_call_id_with_image = None
+    
+    def init_messages(self):
+        self.messages = []
+        self.messages.append(self.create_instruction_message())
+        self.messages.append(self.create_img_message())
+
     def encode_image(self, image_path):
         with open(image_path, "rb") as image_file:
             return base64.b64encode(image_file.read()).decode('utf-8')
@@ -33,10 +39,16 @@ class XAIChatbot:
         }
     def get_messages(self):
         return self.messages
-    def create_img_message(self):
+    def create_img_message(self, decision_no=None):
+        if decision_no is None:
+            file_name_1 = "global_explanation.png"
+            file_name_2 = "local_explanation.png"
+        else:
+            file_name_1 = f"case{decision_no}_global.png"
+            file_name_2 = f"case{decision_no}_local.png"
         base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
-        image1_path = os.path.join(base_dir, "images", "global_explanation.png")
-        image2_path = os.path.join(base_dir, "images", "local_explanation.png")
+        image1_path = os.path.join(base_dir, "images", file_name_1)
+        image2_path = os.path.join(base_dir, "images", file_name_2)
         img1 = self.encode_image(image1_path)
         img2 = self.encode_image(image2_path)
         message = {
@@ -69,14 +81,60 @@ class XAIChatbot:
     def handle_tool_calls(self, tool_calls):
         tool_outputs = []
         for tool_call in tool_calls:
-            if tool_call.function.name == "predict":
-                output = predict(tool_call.function.arguments)
-            elif tool_call.function.name == "generate_shap_diagram":
-                output = generate_shap_diagram(tool_call.function.arguments)
-                output = output.get("shap_diagram")
+            fn_name = tool_call.function.name
+            fn_args = tool_call.function.arguments
+            ic(fn_name)
+            ic(fn_args)
+
+            if fn_name == "predict":
+                output = predict(fn_args)
+
+            elif fn_name == "generate_shap_diagram":
+                # Keep the SHAP diagram logic example, ignoring actual implementation details
+                shap_result = generate_shap_diagram(fn_args)
+                # If the function returns a dict with a key "shap_diagram", use that
+                if isinstance(shap_result, dict):
+                    output = shap_result.get("shap_diagram")
+                else:
+                    # Otherwise just return the whole result
+                    output = shap_result
+                # Remember the ID in case you need to reference it for images
                 self._tool_call_id_with_image = tool_call.id
-            # elif tool_call.function.name == "predict_shap_values":
-            #     output = predict_shap_values(tool_call.function.arguments)
+            elif fn_name == "sum_feature":
+                    output = sum_feature(fn_args)
+
+            elif fn_name == "mean_feature":
+                output = mean_feature(fn_args)
+
+            elif fn_name == "quantile_feature":
+                output = quantile_feature(fn_args)
+
+            elif fn_name == "variance_feature":
+                output = variance_feature(fn_args)
+
+            elif fn_name == "std_feature":
+                output = std_feature(fn_args)
+
+            elif fn_name == "min_feature":
+                output = min_feature(fn_args)
+
+            elif fn_name == "max_feature":
+                output = max_feature(fn_args)
+
+            elif fn_name == "correlation":
+                output = correlation(fn_args)
+
+            elif fn_name == "class_distribution":
+                output = class_distribution(fn_args)
+
+            elif fn_name == "feature_values_for_class":
+                output = feature_values_for_class(fn_args)
+
+            elif fn_name == "feature_distribution":
+                output = feature_distribution(fn_args)
+
+            elif fn_name == "run_simulation":
+                output = run_simulation(fn_args)
             tool_outputs.append({
                 "tool_call_id": tool_call.id,
                 "output": output
@@ -95,6 +153,7 @@ class XAIChatbot:
         return msgs
     def get_completion(self):
         print("Creating completion")
+
         return self.client.chat.completions.create(
             model=self.model,
             messages=self.messages,
@@ -122,7 +181,6 @@ class XAIChatbot:
         self.messages.append(message)
         completion = self.get_completion()
         response = completion.choices[0].message
-        ic(response)
         image = None
         if response.tool_calls:
             self.add_tool_call_prior_response_to_messages(response)

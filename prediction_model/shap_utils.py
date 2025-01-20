@@ -5,10 +5,12 @@ import base64
 import datetime
 import pickle
 from icecream import ic
+import os
+#from neuronal_network import CropPredictor
 if __name__ == "__main__":
-    from neuronal_network import CropPredictor
+    from neural_network import CropPredictor
 else:
-    from .neuronal_network import CropPredictor
+    from .neural_network import CropPredictor
 
 class SHAPUtility:
     """
@@ -151,7 +153,7 @@ class SHAPUtility:
 
 
     @staticmethod
-    def get_shap_global_explanation(predictor, explainer, num_samples=100):
+    def get_shap_global_explanation(predictor, explainer, label, num_samples=100):
         """
         Generate a global SHAP summary plot.
         """
@@ -159,7 +161,7 @@ class SHAPUtility:
         X_test = predictor.test_data.drop(['label'], axis=1)
         X_test_processed = predictor.preprocess_data(X_test, fit=False)[:num_samples]
         
-        class_index = predictor.label_encoder.transform(["beans"])[0]
+        class_index = predictor.label_encoder.transform([label])[0]
         # Get SHAP values
         shap_values = explainer.shap_values(X_test_processed)
         shap_values = shap_values[:,:,class_index]  # SHAP values for the specific class
@@ -187,7 +189,7 @@ class SHAPUtility:
         shap.summary_plot(shap_values, X_test_processed, feature_names=feature_names, show=False)
         
         # Save the plot
-        return SHAPUtility._save_plot("shap_global_summary")
+        return SHAPUtility._save_plot(f"shap_global_summary_{label}")
 
     @staticmethod
     def save_explainer(explainer, file_path):
@@ -222,7 +224,9 @@ class SHAPUtility:
         Save the current matplotlib plot to a file and return the Base64 encoding.
         """
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_path = f"{file_prefix}_{timestamp}.png"
+        # file_path = os.path.join("images", f"{file_prefix}_{timestamp}.png")
+        # file_path = os.path.join("images", f"{file_prefix}.png")
+        file_path = f"{file_prefix}.png"
         plt.savefig(file_path, bbox_inches='tight')
         plt.close()
 

@@ -5,6 +5,7 @@ import numpy as np
 from icecream import ic
 # Initialize the Crop Predictor model
 predictor = CropPredictor()
+
 def _numpy_to_native(data):
     ic(data)
     """
@@ -22,6 +23,7 @@ def _numpy_to_native(data):
         return float(data)
     else:
         return data
+
 def predict(data):
     """
     Predicts the crop based on the soil and environmental characteristics.

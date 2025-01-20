@@ -24,7 +24,9 @@ def describe_dataset(df):
 
 # Beschreibung ausgeben
 dataset_description = describe_dataset(data)
-
+with open("dataset_description.txt", "w") as f:
+    for key, value in dataset_description.items():
+        f.write(f"{key}: {value}\n")
 # Ausgabe
 for key, value in dataset_description.items():
     print(f"{key}: {value}")

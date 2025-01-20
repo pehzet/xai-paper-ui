@@ -1,5 +1,5 @@
 import json
-from .neuronal_network import CropPredictor
+from .neural_network import CropPredictor
 from .shap_utils import SHAPUtility
 
 # Initialize components

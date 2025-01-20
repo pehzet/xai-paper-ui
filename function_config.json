@@ -43,5 +43,279 @@
                 "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall",  "plot_type"]
             }
         }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "predict",
+            "description": "Predicts crops based on the characteristics entered.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
+                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
+                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
+                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "number", "description": "Relative humidity in %."},
+                    "ph": {"type": "number", "description": "PH value of the soil."},
+                    "rainfall": {"type": "number", "description": "rainfall in mm."}
+                },
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "generate_shap_diagram",
+            "description": "Get a diagram for the SHAP values.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
+                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
+                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
+                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
+                    "humidity": {"type": "number", "description": "Relative humidity in %."},
+                    "ph": {"type": "number", "description": "PH value of the soil."},
+                    "rainfall": {"type": "number", "description": "rainfall in mm."},
+                    "plot_type": {
+                        "type": "string",
+                        "enum": ["waterfall", "force"],
+                        "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'. Use Waterfall as default"
+                    }
+                },
+                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall",  "plot_type"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "sum_feature",
+            "description": "Calculates the sum of a feature across the entire dataset or grouped by class.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "mean_feature",
+            "description": "Calculates the mean of a feature across the entire dataset or grouped by class.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "quantile_feature",
+            "description": "Calculates specified quantiles of a feature.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    },
+                    "quantiles": {
+                        "type": "array",
+                        "description": "List of desired quantiles to calculate.",
+                        "items": {
+                            "type": "number"
+                        },
+                        "default": [0.25, 0.5, 0.75]
+                    }
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "variance_feature",
+            "description": "Calculates the variance of a feature.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "std_feature",
+            "description": "Calculates the standard deviation of a feature.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "min_feature",
+            "description": "Returns the minimum value of a feature.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "max_feature",
+            "description": "Returns the maximum value of a feature.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "correlation",
+            "description": "Calculates the correlation coefficient between two features.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "feature1": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the first feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    },
+                    "feature2": {
+                        "type": "string",
+                        "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                        "description": "Name of the second feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                    }
+                },
+                "required": ["feature1", "feature2"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "class_distribution",
+            "description": "Returns the frequency of each class in the dataset.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "feature_values_for_class",
+            "description": "Returns the values of a feature for a specific class.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                "feature": {
+                    "type": "string",
+                    "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                    "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                },
+                "class_label": {
+                    "type": "string",
+                    "enum": ["rice", "maize", "Soyabeans", "beans", "peas", "groundnuts", "cowpeas", "banana", "mango", "grapges", "watermelon", "apple", "orange", "cotton", "coffee"],
+                    "description": "Name of the class. Must be one of ['rice', 'maize', 'Soyabeans', 'beans', 'peas', 'groundnuts', 'cowpeas', 'banana', 'mango', 'grapges', 'watermelon', 'apple', 'orange', 'cotton', 'coffee']"
+                }
+                },
+                "required": ["feature", "class_label"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "feature_distribution",
+            "description": "Returns the histogram distribution of a feature.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                "feature": {
+                    "type": "string",
+                    "enum": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"],
+                    "description": "Name of the feature. Must be one of ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']."
+                },
+                "bins": {
+                    "type": "integer",
+                    "description": "Number of bins for the histogram.",
+                    "default": 10
+                }
+                },
+                "required": ["feature"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "run_simulation",
+            "description": "Run a simulation and returns a report of accuracy of classification.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
     }
 ]

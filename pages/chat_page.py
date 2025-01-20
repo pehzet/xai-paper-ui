@@ -16,10 +16,12 @@ def get_assistant_response(msg):
     # response = st.session_state.assistant.chat(msg["content"])
     # img = render_image(None)
     return response, img
+
+
 def get_messages():
     # TODO MESSAGES ARE EMPTY - FIX
     messages = st.session_state.assistant.get_messages()
-
+    ic(messages)
     extracted_messages = []
 
     for message in messages[2:]:
@@ -41,7 +43,7 @@ def get_messages():
             "content": content,
             "is_img": is_img
         })
-
+    ic(extracted_messages)
     return extracted_messages
 
 
@@ -49,7 +51,6 @@ def get_messages():
 def chat_page(): 
 
     msgs = get_messages()
-    ic(msgs)
     for msg in msgs:
         with st.chat_message(msg["role"]):
             if msg["is_img"]:
