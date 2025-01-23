@@ -1,5 +1,5 @@
 from openai import OpenAI
-# import config
+import config as config_py
 import toml
 import json
 import os
@@ -12,6 +12,7 @@ class XAIChatbot:
     def __init__(self, decision_no=None):
         config_path = os.path.join(".streamlit", "config.toml")
         config = toml.load(config_path)
+        config = config.get("llm")
         self.client = OpenAI(api_key=config.get("OPENAI_API_KEY"))
         self.decision_no = decision_no
         self.model = config.get("MODEL")
