@@ -1,0 +1,12 @@
+flask
+icecream
+keras
+matplotlib
+numpy
+openai
+pandas
+scikit-learn
+scipy
+streamlit
+tensorflow
+toml

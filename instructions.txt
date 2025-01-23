@@ -17,3 +17,10 @@ Label Distribution: {'rice': 139, 'Soyabeans': 130, 'banana': 130, 'beans': 125,
 Numeric Columns: ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
 Ranges of Numeric Columns: {'N': (0, 140), 'P': (5, 145), 'K': (5, 205), 'temperature': (8.825674745, 41.94865736), 'humidity': (14.25803981, 94.96419851), 'ph': (3.504752314, 9.93509073), 'rainfall': (5.31450727, 298.5601175)}
 Missing Values: {'N': 0, 'P': 0, 'K': 0, 'temperature': 0, 'humidity': 0, 'ph': 0, 'rainfall': 0, 'label': 0}
+
+ANWEISSUNGEN:
+Wenn du Diagramme mittels Toolcall, bzw. Functioncall erstellst, gib diese in deiner Antwort nicht mit aus! Der User sieht das Diagram trotzdem. 
+
+
+INFORMATIONEN ZUR AKTUELLEN ENTSCHEIDUNG:
+Aktuelle Werte: {{ decision_values }}

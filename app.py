@@ -9,9 +9,10 @@ from icecream import ic
 import copy
 import json
 from datetime import datetime
+import uuid
 def init():
     if not "assistant" in st.session_state:
-        st.session_state.assistant = XAIChatbot()
+        st.session_state.assistant = XAIChatbot(decision_no=1)
     if not "chat_history" in st.session_state:
         st.session_state.chat_history = {}
     if not "decision_no" in st.session_state:
@@ -32,11 +33,15 @@ def init():
 )
 
 def save_session_state():
+    user_id = st.session_state.get("user_id", None)
+    if user_id is None:
+        print("User ID not found. Going to generate uuid.")
+        user_id = str(uuid.uuid4())
     session_state_copy = copy.deepcopy(st.session_state)
     session_state_copy.pop("assistant")
     session_state_dict = {k: v for k, v in session_state_copy.items()}
     # ic(session_state_dict)         
-    with open("session_state.json", "w", encoding="utf-8") as f:
+    with open(f"session_state_{user_id}.json", "w", encoding="utf-8") as f:
         json.dump(session_state_dict, f)
 
 def upload_session_state():

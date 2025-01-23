@@ -1,5 +1,6 @@
 from openai import OpenAI
-import config
+# import config
+import toml
 import json
 import os
 import base64
@@ -7,20 +8,31 @@ import sys
 from icecream import ic
 from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation
 from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
+import pandas as pd
 class XAIChatbot:
     def __init__(self, decision_no=None):
-        
-        self.client = OpenAI(api_key=config.OPENAI_API_KEY)
-        self.model = config.MODEL
-        self.messages = []
-        self.messages.append(self.create_instruction_message())
-        self.messages.append(self.create_img_message())
+        config_path = os.path.join(".streamlit", "config.toml")
+        config = toml.load(config_path)
+        self.client = OpenAI(api_key=config.get("OPENAI_API_KEY"))
+        self.decision_no = decision_no
+        self.model = config.get("MODEL")
+        self.init_messages()
         self.function_config = self.load_function_config()
         self._tool_call_id_with_image = None
-    
+    def _get_decision_case(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        decisions_file = os.path.join(current_dir, "prediction_model","data", "test_cases.csv")
+        decisions = pd.read_csv(decisions_file)
+        decisions = decisions.drop("label", axis=1)
+        # ic(decisions.iloc[self.decision_no-1].to_dict())
+        return json.dumps(decisions.iloc[self.decision_no-1].to_dict())
+
     def init_messages(self):
         self.messages = []
-        self.messages.append(self.create_instruction_message())
+        decision_values = self._get_decision_case()
+        instruction_message = self.create_instruction_message(placeholder="{{ decision_values }}", placeholder_value=decision_values)
+        # ic(instruction_message)
+        self.messages.append(instruction_message)
         self.messages.append(self.create_img_message())
 
     def encode_image(self, image_path):
@@ -30,9 +42,11 @@ class XAIChatbot:
         with open("function_config.json", "r") as f:
             function_config = json.load(f)
         return function_config
-    def create_instruction_message(self):
+    def create_instruction_message(self, placeholder:str=None, placeholder_value:str=None):
         with open("instructions.txt", "r", encoding="utf-8") as f:
             message = f.read()
+        if placeholder:
+            message = message.replace(placeholder, placeholder_value)
         return {
             "role": "system",
             "content": message
@@ -101,7 +115,7 @@ class XAIChatbot:
                 # Remember the ID in case you need to reference it for images
                 self._tool_call_id_with_image = tool_call.id
             elif fn_name == "sum_feature":
-                    output = sum_feature(fn_args)
+                output = sum_feature(fn_args)
 
             elif fn_name == "mean_feature":
                 output = mean_feature(fn_args)
@@ -139,13 +153,14 @@ class XAIChatbot:
                 "tool_call_id": tool_call.id,
                 "output": output
             })
+
         return tool_outputs
     def create_tool_messages(self, tool_outputs):
         msgs = []
         for output in tool_outputs:
             msgs.append({
                 "role": "tool",
-                "content": output["output"],
+                "content": str(output["output"]),
                 "tool_call_id": output["tool_call_id"]
 
             })
@@ -196,7 +211,7 @@ class XAIChatbot:
 
             # ic(self.messages[2].content[0])
             completion = self.get_completion()
-            ic(completion)
+
             response = completion.choices[0].message
 
        

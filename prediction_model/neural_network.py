@@ -13,6 +13,7 @@ from tensorflow.keras.layers import Dense, Dropout
 
 FORCE_TRAIN = 0
 
+
 class CropPredictor:
     """
     A class for predicting crop using a neural network model.
