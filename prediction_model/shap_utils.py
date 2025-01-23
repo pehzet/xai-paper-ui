@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import base64
 import datetime
 import pickle
-from icecream import ic
+
 import os
 #from neuronal_network import CropPredictor
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ from pages.decision import decision
 from pages.thanks import thanks
 from pages.chat_page import chat_page
 from chatbot import XAIChatbot
-from icecream import ic
+
 import copy
 import json
 from datetime import datetime
@@ -40,7 +40,7 @@ def save_session_state():
     session_state_copy = copy.deepcopy(st.session_state)
     session_state_copy.pop("assistant")
     session_state_dict = {k: v for k, v in session_state_copy.items()}
-    # ic(session_state_dict)         
+    
     with open(f"session_state_{user_id}.json", "w", encoding="utf-8") as f:
         json.dump(session_state_dict, f)
 

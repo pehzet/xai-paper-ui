@@ -5,7 +5,6 @@ import json
 import os
 import base64
 import sys
-from icecream import ic
 from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation
 from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 import pandas as pd
@@ -24,14 +23,12 @@ class XAIChatbot:
         decisions_file = os.path.join(current_dir, "prediction_model","data", "test_cases.csv")
         decisions = pd.read_csv(decisions_file)
         decisions = decisions.drop("label", axis=1)
-        # ic(decisions.iloc[self.decision_no-1].to_dict())
         return json.dumps(decisions.iloc[self.decision_no-1].to_dict())
 
     def init_messages(self):
         self.messages = []
         decision_values = self._get_decision_case()
         instruction_message = self.create_instruction_message(placeholder="{{ decision_values }}", placeholder_value=decision_values)
-        # ic(instruction_message)
         self.messages.append(instruction_message)
         self.messages.append(self.create_img_message())
 
@@ -97,9 +94,6 @@ class XAIChatbot:
         for tool_call in tool_calls:
             fn_name = tool_call.function.name
             fn_args = tool_call.function.arguments
-            ic(fn_name)
-            ic(fn_args)
-
             if fn_name == "predict":
                 output = predict(fn_args)
 
@@ -209,7 +203,7 @@ class XAIChatbot:
                     image = tool_msg["content"]
                     self._tool_call_id_with_image = None
 
-            # ic(self.messages[2].content[0])
+
             completion = self.get_completion()
 
             response = completion.choices[0].message
@@ -217,5 +211,5 @@ class XAIChatbot:
        
         response_oai = self._create_message("assistant", response.content)
         self.messages.append(response_oai)
-        # ic(self.messages)
+
         return response.content, image

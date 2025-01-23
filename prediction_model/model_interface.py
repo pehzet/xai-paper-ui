@@ -2,11 +2,10 @@
 import json
 from .neural_network import CropPredictor
 import numpy as np
-from icecream import ic
+
 # Initialize the Crop Predictor model
 predictor = CropPredictor()
 def _numpy_to_native(data):
-    ic(data)
     """
     Convert NumPy data types to native Python data types.
     """

@@ -1,6 +1,6 @@
 import streamlit as st
 import time
-from icecream import ic
+
 import pandas as pd
 import os
 from datetime import datetime
