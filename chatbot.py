@@ -1,5 +1,4 @@
 from openai import OpenAI
-import config as config_py
 import toml
 import json
 import os
