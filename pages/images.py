@@ -12,7 +12,7 @@ def show_images():
     image2_path = os.path.join(parent_dir, "images", img2_pth)
     col1, col2 = st.columns(2)
     with col1:
-        st.image(image1_path, caption="Global Explanation", use_column_width=True)
+        st.image(image1_path, caption="Global Explanation", use_container_width=True)
         
     with col2:
-        st.image(image2_path, caption="Local Explanation", use_column_width=True)
+        st.image(image2_path, caption="Local Explanation", use_container_width=True)
