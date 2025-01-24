@@ -39,7 +39,8 @@ class CropPredictor:
 
         self.numerical_features = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
 
-        self.model_path = r'prediction_model\model\nn_model.keras'
+        self.model_path = os.path.join('prediction_model', 'model', 'nn_model.keras')
+        
 
         self.load_data()
         if not os.path.exists(self.model_path) or FORCE_TRAIN:
@@ -51,7 +52,7 @@ class CropPredictor:
 
         # self.run_simulation()
 
-    def load_data(self, filepath=r'data\Crop_recommendation.csv'):
+    def load_data(self, filepath=os.path.join('data', 'Crop_recommendation.csv')):
         """
         Loads and preprocesses the dataset from the given CSV file.
 

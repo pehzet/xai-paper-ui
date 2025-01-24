@@ -68,7 +68,7 @@ class XAIChatbot:
             "content": [
         {
           "type": "text",
-          "text": "Hier sind die beiden Bilder mit SHAP Werten. Das erste ist eine globale Erklärung und das zweite eine lokale. Gehe vorerst nicht drauf ein. Erst wenn ich explizit danach frage.",
+          "text": "Here are the two images with SHAP values. The first is a global explanation and the second is a local one. Don't go into it for now. Only when I explicitly ask for it.",
         },
         {
           "type": "image_url",

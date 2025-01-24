@@ -19,7 +19,6 @@ def get_test_case():
     return test_case.to_dict()
 
 def decision():
-    
     if st.session_state.new_decision:
         st.session_state.test_case = get_test_case()
         st.session_state.prediction = predict(st.session_state.test_case)
@@ -31,7 +30,7 @@ def decision():
 
     options = ['rice', 'Soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
     # Create buttons in each column
-    decision = st.selectbox("Was würdest du aussäen?",options, placeholder="Bitte wählen", index=None)
+    decision = st.selectbox("Which crop would you plant?",options, placeholder="Please choose", index=None)
     submit = st.button("Submit")
     if submit:
         st.session_state["choices"][st.session_state.decision_no] = decision

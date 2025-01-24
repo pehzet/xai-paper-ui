@@ -35,7 +35,7 @@ def _remove_images_from_text(text):
     """
     cleaned_text = re.sub(r"!\[.*?\]\(data:image/png;base64,.*?\)", "", text, flags=re.DOTALL)
 
-    print(cleaned_text)
+
     
     return cleaned_text
 def get_messages():
@@ -88,13 +88,13 @@ def chat_page():
             else:
                 st.markdown(msg["content"])
     
-    if prompt := st.chat_input("Wie kann ich helfen?"):
+    if prompt := st.chat_input("How can I help you?"):
    
         with st.chat_message("user"):
             st.markdown(prompt)
 
 
-        with st.spinner("Bin gleich wieder da..."):
+        with st.spinner("Be right back..."):
             response, img_base64 = get_assistant_response(prompt)
         # Display assistant's response in chat message container
         with st.chat_message("assistant"):
