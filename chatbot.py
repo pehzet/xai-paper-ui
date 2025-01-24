@@ -7,10 +7,12 @@ import sys
 from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation
 from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 import pandas as pd
+import streamlit as st
 class XAIChatbot:
     def __init__(self, decision_no=None):
-        config_path = os.path.join(".streamlit", "config.toml")
-        config = toml.load(config_path)
+        # config_path = os.path.join(".streamlit", "config.toml")
+        config = st.secrets #toml.load(config_path)
+        print(config)
         config = config.get("llm")
         self.client = OpenAI(api_key=config.get("OPENAI_API_KEY"))
         self.decision_no = decision_no
