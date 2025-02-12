@@ -241,16 +241,18 @@ if __name__ == "__main__":
     # X = [[2, 5, 12, 5.2, 2.3, 1.1, 12.5]]
     input_data = {
     
-    "N": 50,
-    "P": 30,
-    "K": 20,
-    "ph": 6.5,
-    "temperature": 25.0,
-    "humidity": 60.5,
-    "rainfall": 100.0,
+    "N": 43.0000,
+    "P": 68.0000,
+    "K": 81.0000,
+    "ph": 6.7616,
+    "temperature": 17.6781,
+    "humidity": 18.2325,
+    "rainfall": 79.9206,
     "plot_type": "waterfall"
 }
-    SHAPUtility.get_shap_global_explanation(CropPredictor(), SHAPUtility.initialize_shap_explainer(CropPredictor()), num_samples=150)
+    # SHAPUtility.get_shap_global_explanation(CropPredictor(), SHAPUtility.initialize_shap_explainer(CropPredictor()), num_samples=150)
+
+    SHAPUtility.generate_shap_diagram(input_data)
     # # Class to explain
     # class_name = "beans"
     # class_name = None

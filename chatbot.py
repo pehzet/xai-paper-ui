@@ -12,7 +12,6 @@ class XAIChatbot:
     def __init__(self, decision_no=None):
         # config_path = os.path.join(".streamlit", "config.toml")
         config = st.secrets #toml.load(config_path)
-        print(config)
         config = config.get("llm")
         self.client = OpenAI(api_key=config.get("OPENAI_API_KEY"))
         self.decision_no = decision_no

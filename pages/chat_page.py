@@ -78,7 +78,7 @@ def get_messages():
 
 
 def chat_page(): 
-
+    st.write("If you have any questions, feel free to ask the assistant.")
     msgs = get_messages()
     for msg in msgs:
         with st.chat_message(msg["role"]):

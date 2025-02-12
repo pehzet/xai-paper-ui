@@ -17,6 +17,10 @@ def init():
         st.session_state.chat_history = {}
     if not "decision_no" in st.session_state:
         st.session_state.decision_no = 1
+    if not "decision_id" in st.session_state:
+        st.session_state.decision_id = 1
+    if not "done_decision_ids" in st.session_state:
+        st.session_state.done_decision_ids = []
     if not "decision_made" in st.session_state:
         st.session_state.decision_made = False
     if not "new_decision" in st.session_state:
@@ -40,7 +44,7 @@ def save_session_state():
     session_state_copy = copy.deepcopy(st.session_state)
     session_state_copy.pop("assistant")
     session_state_dict = {k: v for k, v in session_state_copy.items()}
-    
+
     with open(f"session_state_{user_id}.json", "w", encoding="utf-8") as f:
         json.dump(session_state_dict, f)
 
@@ -73,9 +77,10 @@ def main():
     elif st.session_state["page"] == "chat":
         if st.session_state.new_decision:
             st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
-            st.write(f"Decision {st.session_state.decision_no}")
-        show_images()
+            
+        
         decision()
+        show_images()
         chat_page()
 
         if st.session_state.decision_made:
