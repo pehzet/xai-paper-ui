@@ -9,7 +9,7 @@ data = pd.read_csv('Crop_recommendation.csv')
 '''
 label
 rice          139
-Soyabeans     130
+soyabeans     130
 banana        130
 beans         125
 cowpeas       122

@@ -3,9 +3,9 @@ from PIL import Image
 import os
 def show_images():
     # format_images_html()
-    st.write("For further support you can view the global and local SHAP explanations for the decision.")
-    img1_pth = f"case{st.session_state.decision_no}_global.png"
-    img2_pth = f"case{st.session_state.decision_no}_local.png"
+    # st.write("For further support you can view the global and local SHAP explanations for the decision.")
+    img1_pth = f"case{st.session_state.decision_id}_global.png"
+    img2_pth = f"case{st.session_state.decision_id}_local.png"
     base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
     parent_dir = os.path.dirname(base_dir)
     image1_path = os.path.join(parent_dir, "images", img1_pth)

@@ -78,30 +78,34 @@ def get_messages():
 
 
 def chat_page(): 
-    st.write("If you have any questions, feel free to ask the assistant.")
+    # st.write("If you have any questions, feel free to ask the assistant.")
+    # st.write("Decision Assistant")
     msgs = get_messages()
-    for msg in msgs:
-        with st.chat_message(msg["role"]):
-            if msg["is_img"]:
-                img = render_image(msg["content"])
-                st.image(img)
-            else:
-                st.markdown(msg["content"])
-    
-    if prompt := st.chat_input("How can I help you?"):
-   
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    chat_placeholder = st.empty()
 
+    def render_chat(msgs, new_msg = None):
+        with chat_placeholder.container(height=250, border=False):
+            for msg in msgs:
+                with st.chat_message(msg["role"]):
+                    if msg["is_img"]:
+                        img = render_image(msg["content"])
+                        st.image(img)
+                    else:
+                        st.markdown(msg["content"])
+            if new_msg:
+                with st.chat_message("user"):
+                    st.markdown(new_msg)
+    render_chat(msgs)
+    if prompt := st.chat_input("I´m your Decision Assistant. How can I support you?"):
+   
+        # with st.chat_message("user"):
+        #     st.markdown(prompt)
+        render_chat(msgs, prompt)
 
         with st.spinner("Be right back..."):
             response, img_base64 = get_assistant_response(prompt)
-        # Display assistant's response in chat message container
-        with st.chat_message("assistant"):
-            if img_base64:
-                img = render_image(img_base64)
-                st.image(img)
-            st.markdown(_remove_images_from_text(response))
+
+        st.rerun()
            
 
             

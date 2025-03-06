@@ -8,6 +8,7 @@ from prediction_model.model_interface import predict, sum_feature, mean_feature,
 from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 import pandas as pd
 import streamlit as st
+from icecream import ic
 class XAIChatbot:
     def __init__(self, decision_no=None):
         # config_path = os.path.join(".streamlit", "config.toml")
@@ -91,10 +92,14 @@ class XAIChatbot:
             "content": content
         }
     def handle_tool_calls(self, tool_calls):
+        ic(tool_calls)
         tool_outputs = []
         for tool_call in tool_calls:
             fn_name = tool_call.function.name
             fn_args = tool_call.function.arguments
+
+            ic(fn_name)
+            ic(fn_args)
             if fn_name == "predict":
                 output = predict(fn_args)
 
@@ -192,10 +197,11 @@ class XAIChatbot:
         completion = self.get_completion()
         response = completion.choices[0].message
         image = None
-        if response.tool_calls:
+        while response.tool_calls:
             self.add_tool_call_prior_response_to_messages(response)
             tool_outputs = self.handle_tool_calls(response.tool_calls)
             tool_msgs = self.create_tool_messages(tool_outputs)
+
             # self.messages.append(response)
             for tool_msg in tool_msgs:
                 
@@ -204,12 +210,12 @@ class XAIChatbot:
                     image = tool_msg["content"]
                     self._tool_call_id_with_image = None
 
-
+            
             completion = self.get_completion()
-
+            ic(completion)
             response = completion.choices[0].message
 
-       
+   
         response_oai = self._create_message("assistant", response.content)
         self.messages.append(response_oai)
 

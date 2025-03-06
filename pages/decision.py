@@ -17,7 +17,6 @@ FEATURE_METADATA = {
 }
 
 def get_decision_id():
-    print(st.session_state.decision_no)
     if st.session_state.decision_no <= 3:
         decision_id = st.session_state.decision_no 
     else:
@@ -58,6 +57,32 @@ def get_test_case_with_metadata(test_case):
             })
 
     return pd.DataFrame(test_case_data).set_index("Feature")
+def test_case_table():
+    if st.session_state.new_decision:
+        decision_id = get_decision_id()
+        st.session_state.decision_id = decision_id
+        st.session_state.test_case = get_test_case(decision_id)
+        st.session_state.prediction = predict(st.session_state.test_case)
+    test_case_df = get_test_case_with_metadata(st.session_state.test_case)
+    st.table(test_case_df)
+
+def decision_dropdown():
+    options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
+    # Create buttons in each column
+    decision = st.selectbox("Selection", options, placeholder="Select the crop to plant", index=None, label_visibility="collapsed")
+    submit = st.button("Submit")
+    if submit:
+
+        if decision is None:
+            st.error("Please select a crop to plant.")
+        else:
+            st.session_state["choices"][st.session_state.decision_no] = decision
+            # st.session_state.decision_no += 1
+            st.session_state.decision_made = True
+            # if st.session_state.decision_no > 10    :
+            #     st.session_state["page"] = "thanks"
+            # st.rerun()
+
 def decision():
     if st.session_state.new_decision:
         decision_id = get_decision_id()
@@ -72,15 +97,14 @@ def decision():
     st.session_state.new_decision = False
     # Check if 'button_clicked' is in session_state, if not, initialize it to None
 
-    options = ['rice', 'Soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
+    options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
     # Create buttons in each column
-    decision = st.selectbox("Which crop would you plant?",options, placeholder="Please choose", index=None)
+    decision = st.selectbox("", options, placeholder="Select the crop to plant", index=None)
     submit = st.button("Submit")
     if submit:
         st.session_state["choices"][st.session_state.decision_no] = decision
+        decision = None
         # st.session_state.decision_no += 1
         st.session_state.decision_made = True
-        # if st.session_state.decision_no > 10    :
-        #     st.session_state["page"] = "thanks"
-        # st.rerun()
+
     
