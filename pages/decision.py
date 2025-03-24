@@ -6,14 +6,15 @@ import os
 from datetime import datetime
 from prediction_model.model_interface import predict
 import random
+from icecream import ic
 FEATURE_METADATA = {
-    "N": {"unit": "kg/ha", "min": 0, "max": 140},
-    "P": {"unit": "kg/ha", "min": 5, "max": 145},
-    "K": {"unit": "kg/ha", "min": 5, "max": 205},
-    "temperature": {"unit": "°C", "min": 8.83, "max": 41.95},
-    "humidity": {"unit": "%", "min": 14.26, "max": 94.96},
-    "ph": {"unit": "pH", "min": 3.50, "max": 9.94},
-    "rainfall": {"unit": "mm/month", "min": 5.31, "max": 298.56},
+    "N": {"unit": "kg/ha", "min": 0, "max": 140, "info": "Nitrogen content in the fertilizer (kg/ha)"},
+    "P": {"unit": "kg/ha", "min": 5, "max": 145, "info": "Phosphorus content in the fertilizer (kg/ha)"},
+    "K": {"unit": "kg/ha", "min": 5, "max": 205, "info": "Potassium content in the fertilizer (kg/ha)"},
+    "temperature": {"unit": "°C", "min": 8.83, "max": 41.95, "info": "Mean Temperature (°C) of the region in a year"},
+    "humidity": {"unit": "%", "min": 14.26, "max": 94.96, "info": "Mean relative humidity (%) of the region in a year"},
+    "ph": {"unit": "pH", "min": 3.50, "max": 9.94, "info": "Current Soil pH value"},
+    "rainfall": {"unit": "mm/month", "min": 5.31, "max": 298.56, "info": "Average monthly rainfall (mm) of the region"},
 }
 
 def get_decision_id():
@@ -36,6 +37,8 @@ def get_test_case(decision_id):
     test_cases_file = os.path.join(parent_dir,"prediction_model", "data", "test_cases.csv")
     test_cases = pd.read_csv(test_cases_file)
     test_case = test_cases.iloc[decision_id - 1]
+
+    ic(test_case)
     test_case = test_case.drop('label')
 
     return test_case.to_dict()
@@ -48,12 +51,14 @@ def get_test_case_with_metadata(test_case):
     for feature, value in test_case.items():
         if feature in FEATURE_METADATA:
             metadata = FEATURE_METADATA[feature]
+
             test_case_data.append({
                 "Feature": feature,
                 "Current Value": value,
                 "Unit": metadata["unit"],
                 "Min": metadata["min"],
-                "Max": metadata["max"]
+                "Max": metadata["max"],
+                "Info": metadata["info"]
             })
 
     return pd.DataFrame(test_case_data).set_index("Feature")
@@ -62,9 +67,16 @@ def test_case_table():
         decision_id = get_decision_id()
         st.session_state.decision_id = decision_id
         st.session_state.test_case = get_test_case(decision_id)
-        st.session_state.prediction = predict(st.session_state.test_case)
+        ic(st.session_state.test_case)
+        prediction = predict(st.session_state.test_case)
+        ic(prediction)
+        st.session_state.prediction = prediction
+        st.session_state.predicted_labels.append(prediction)
     test_case_df = get_test_case_with_metadata(st.session_state.test_case)
     st.table(test_case_df)
+
+
+
 
 def decision_dropdown():
     options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
@@ -95,10 +107,9 @@ def decision():
     st.table(test_case_df)
     
     st.session_state.new_decision = False
-    # Check if 'button_clicked' is in session_state, if not, initialize it to None
 
     options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
-    # Create buttons in each column
+    
     decision = st.selectbox("", options, placeholder="Select the crop to plant", index=None)
     submit = st.button("Submit")
     if submit:

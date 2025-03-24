@@ -92,14 +92,12 @@ class XAIChatbot:
             "content": content
         }
     def handle_tool_calls(self, tool_calls):
-        ic(tool_calls)
+   
         tool_outputs = []
         for tool_call in tool_calls:
             fn_name = tool_call.function.name
             fn_args = tool_call.function.arguments
 
-            ic(fn_name)
-            ic(fn_args)
             if fn_name == "predict":
                 output = predict(fn_args)
 
@@ -212,7 +210,7 @@ class XAIChatbot:
 
             
             completion = self.get_completion()
-            ic(completion)
+ 
             response = completion.choices[0].message
 
    

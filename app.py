@@ -31,6 +31,8 @@ def init():
         st.session_state.decision_id = 1
     if "done_decision_ids" not in st.session_state:
         st.session_state.done_decision_ids = []
+    if "predicted_labels" not in st.session_state:
+        st.session_state.predicted_labels = []
     if "decision_made" not in st.session_state:
         st.session_state.decision_made = False
     if "new_decision" not in st.session_state:
