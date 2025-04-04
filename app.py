@@ -65,7 +65,7 @@ def save_session_state():
 
     with open(f"session_state_{user_id}.json", "w", encoding="utf-8") as f:
         json.dump(session_state_dict, f)
-    # upload_session_state(user_id)
+    upload_session_state(user_id)
 
 
 def upload_session_state(user_id):
