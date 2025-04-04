@@ -34,6 +34,6 @@ def decision_new():
     with row3:
         with col3_1:
             decision_dropdown()
-        with col3_2:
-            chat_page()
+        # with col3_2:
+        #     chat_page()
     st.session_state.new_decision = False
