@@ -3,7 +3,7 @@ import os
 import json
 from webdav3.client import Client
 
-title = "XAI Paper"
+title = "Cropify"
 st.set_page_config(layout="wide", page_title=title, initial_sidebar_state="collapsed")
 
 from pages.welcome import welcome_page
