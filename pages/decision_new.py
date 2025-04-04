@@ -13,8 +13,8 @@ def prediction_element():
 def decision_new():
     if not str(st.session_state.decision_no) in st.session_state.decision_times:
         st.session_state.decision_times[str(st.session_state.decision_no)] = {}
-
-    st.session_state.decision_times[str(st.session_state.decision_no)]["start"] = datetime.now().isoformat()
+    if "start" not in st.session_state.decision_times[str(st.session_state.decision_no)]:
+        st.session_state.decision_times[str(st.session_state.decision_no)]["start"] = datetime.now().isoformat()
     st.progress(0.1 * int(st.session_state.decision_no))
     st.markdown(f"<p style='font-size: 20px;'> Decision {st.session_state.decision_no} of 10 </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below. Use the prediction to help you decide.<p>", unsafe_allow_html=True)

@@ -13,6 +13,7 @@ from pages.thanks import thanks
 from pages.chat_page import chat_page
 from pages.decision_new import decision_new
 from pages.survey import show_survey
+from pages.explain import show_explanation
 from chatbot import XAIChatbot
 
 import copy
@@ -43,6 +44,12 @@ def init():
         st.session_state.decision_times = {}
     if "survey_completed" not in st.session_state:
         st.session_state.survey_completed = False
+    if "decision_completed" not in st.session_state:
+        st.session_state.decision_completed = False
+    if "correct_choices" not in st.session_state:
+        st.session_state.correct_choices = 0
+    if "page" not in st.session_state:
+        st.session_state.page = "welcome"
     if not "experiment_start" in st.session_state:
         st.session_state.experiment_start = datetime.now().isoformat()
 
@@ -91,32 +98,35 @@ def upload_session_state(user_id):
 
 
 def close_decision():
+
+    
+    st.session_state.done_decision_ids.append(st.session_state.decision_id)
     st.session_state.decision_times[str(st.session_state.decision_no)]["end"] =  datetime.now().isoformat()
     st.session_state.decision_made = False
     st.session_state.new_decision = True
     st.session_state.chat_history[st.session_state.decision_no] = st.session_state.assistant.get_messages()
     st.session_state["page"] = "survey"
-    st.session_state.survey_completed = False
+    st.session_state.decision_completed = False
     save_session_state()
     st.rerun()
 
 
-def complete_survey():
+def complete_decision():
     
     st.session_state.decision_no += 1
     if st.session_state.decision_no > 10:
         st.session_state["page"] = "thanks"
     else:
         st.session_state["page"] = "chat"
+
     st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
     save_session_state()
-    st.session_state.survey_completed = False
+    st.session_state.decision_completed = False
     st.rerun()
 
 
 def main():
-    if "page" not in st.session_state:
-        st.session_state["page"] = "welcome"
+
     
     if st.session_state["page"] == "welcome":
         welcome_page()
@@ -128,11 +138,16 @@ def main():
             close_decision()
     elif st.session_state["page"] == "survey":
         show_survey()
-        if st.session_state.survey_completed:
-            complete_survey()
+
+    elif st.session_state["page"] == "explain":
+        show_explanation()
+        if st.session_state.decision_completed:
+            complete_decision()
     elif st.session_state["page"] == "thanks":
         st.session_state.experiment_end = datetime.now().isoformat()
+        save_session_state()
         thanks()
+        
 
 
 if __name__ == "__main__":

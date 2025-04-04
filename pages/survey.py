@@ -23,7 +23,9 @@ def show_survey():
     if btn:
         # for key, value in responses.items():
         #     st.session_state[str(st.session_state.decision_no)]["survey"][key] = value
+
         st.session_state.survey_completed = True
+        st.session_state["page"] = "explain"
         st.rerun()
 
 
