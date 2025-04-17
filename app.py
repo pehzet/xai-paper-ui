@@ -22,7 +22,7 @@ import json
 from datetime import datetime
 import uuid
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 def init():
@@ -95,7 +95,7 @@ def upload_session_state(user_id):
             local_path=filepath
         )
         
-        logger.debug(f"File successfully uploaded to Sciebo: {remote_path}")
+        logger.info(f"File successfully uploaded to Sciebo: {remote_path}")
         
     except Exception as e:
         logger.error(f"Error saving/uploading results: {str(e)}")
