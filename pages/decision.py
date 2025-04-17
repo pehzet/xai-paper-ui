@@ -28,17 +28,13 @@ def get_decision_id():
     return decision_id
 def get_test_case(decision_id):
 
-    st.session_state.done_decision_ids.append(decision_id)
-    st.session_state.decision_times[str(st.session_state.decision_no)] = {}
-    st.session_state.decision_times[str(st.session_state.decision_no)]["decision_id"] = decision_id
-    st.session_state.decision_times[str(st.session_state.decision_no)]["start"] = datetime.now().isoformat()
     base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
     parent_dir = os.path.dirname(base_dir)
     test_cases_file = os.path.join(parent_dir,"prediction_model", "data", "test_cases.csv")
     test_cases = pd.read_csv(test_cases_file)
     test_case = test_cases.iloc[decision_id - 1]
-
-    ic(test_case)
+    st.session_state["true_label"] = test_case["label"]
+   
     test_case = test_case.drop('label')
 
     return test_case.to_dict()
@@ -67,9 +63,9 @@ def test_case_table():
         decision_id = get_decision_id()
         st.session_state.decision_id = decision_id
         st.session_state.test_case = get_test_case(decision_id)
-        ic(st.session_state.test_case)
+      
         prediction = predict(st.session_state.test_case)
-        ic(prediction)
+ 
         st.session_state.prediction = prediction
         st.session_state.predicted_labels.append(prediction)
     test_case_df = get_test_case_with_metadata(st.session_state.test_case)
@@ -80,6 +76,7 @@ def test_case_table():
 
 def decision_dropdown():
     options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
+    options = sorted(options)
     # Create buttons in each column
     decision = st.selectbox("Selection", options, placeholder="Select the crop to plant", index=None, label_visibility="collapsed")
     submit = st.button("Submit")

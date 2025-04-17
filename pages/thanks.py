@@ -21,6 +21,7 @@ def calculate_correct_choices():
 def thanks():
     st.title("Thank You Page")
     correct_choices = calculate_correct_choices()
+    st.session_state.correct_choices = correct_choices
     st.write(f"You made **{correct_choices}/{len(st.session_state.choices)}** correct choices.")
-    st.write("Thank you for using our app.")
+    st.write("You can close the tab now and return to the survey.")
 
