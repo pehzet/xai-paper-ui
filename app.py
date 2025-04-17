@@ -2,7 +2,7 @@ import streamlit as st
 import os
 import json
 from webdav3.client import Client
-
+import posixpath
 title = "Cropify"
 st.set_page_config(layout="wide", page_title=title, initial_sidebar_state="collapsed")
 
@@ -16,10 +16,14 @@ from pages.survey import show_survey
 from pages.explain import show_explanation
 from chatbot import XAIChatbot
 
+import logging
 import copy
 import json
 from datetime import datetime
 import uuid
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 def init():
     if "assistant" not in st.session_state:
@@ -83,17 +87,18 @@ def upload_session_state(user_id):
         }
         client = Client(options)
         
-        remote_path = os.path.join(sciebo_config.get('SCIEBO_DIRECTORY', ''), filename).replace('\\', '/')
+        # remote_path = os.path.join(sciebo_config.get('SCIEBO_DIRECTORY', ''), filename).replace('\\', '/')
+        remote_path = posixpath.join(sciebo_config.get('SCIEBO_DIRECTORY', ''), filename)
         
         client.upload_file(
             remote_path=remote_path,
             local_path=filepath
         )
         
-        print(f"File successfully uploaded to Sciebo: {remote_path}")
+        logger.debug(f"File successfully uploaded to Sciebo: {remote_path}")
         
     except Exception as e:
-        print(f"Error saving/uploading results: {str(e)}")
+        logger.error(f"Error saving/uploading results: {str(e)}")
 
 
 
