@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 def init():
     if "assistant" not in st.session_state:
-        st.session_state.assistant = XAIChatbot(decision_no=1)
+        st.session_state.assistant = None # XAIChatbot(decision_no=1)
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = {}
     if "decision_no" not in st.session_state:
@@ -136,8 +136,8 @@ def main():
     if st.session_state["page"] == "welcome":
         welcome_page()
     elif st.session_state["page"] == "chat":
-        if st.session_state.new_decision:
-            st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
+        # if st.session_state.new_decision:
+            # st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
         decision_new()
         if st.session_state.decision_made:
             close_decision()
