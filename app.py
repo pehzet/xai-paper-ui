@@ -109,7 +109,7 @@ def close_decision():
     st.session_state.decision_times[str(st.session_state.decision_no)]["end"] =  datetime.now().isoformat()
     st.session_state.decision_made = False
     st.session_state.new_decision = True
-    st.session_state.chat_history[st.session_state.decision_no] = st.session_state.assistant.get_messages()
+    # st.session_state.chat_history[st.session_state.decision_no] = st.session_state.assistant.get_messages()
     st.session_state["page"] = "survey"
     st.session_state.decision_completed = False
     save_session_state()
