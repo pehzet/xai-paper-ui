@@ -75,7 +75,7 @@ def test_case_table():
 
 
 def decision_dropdown():
-    options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
+    options = ['rice', 'soybeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
     options = sorted(options)
     # Create buttons in each column
     decision = st.selectbox("Selection", options, placeholder="Select the crop to plant", index=None, label_visibility="collapsed")
@@ -105,7 +105,7 @@ def decision():
     
     st.session_state.new_decision = False
 
-    options = ['rice', 'soyabeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
+    options = ['rice', 'soybeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
     
     decision = st.selectbox("", options, placeholder="Select the crop to plant", index=None)
     submit = st.button("Submit")
