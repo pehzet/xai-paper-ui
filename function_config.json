@@ -275,8 +275,8 @@
                 },
                 "class_label": {
                     "type": "string",
-                    "enum": ["rice", "maize", "Soyabeans", "beans", "peas", "groundnuts", "cowpeas", "banana", "mango", "grapges", "watermelon", "apple", "orange", "cotton", "coffee"],
-                    "description": "Name of the class. Must be one of ['rice', 'maize', 'Soyabeans', 'beans', 'peas', 'groundnuts', 'cowpeas', 'banana', 'mango', 'grapges', 'watermelon', 'apple', 'orange', 'cotton', 'coffee']"
+                    "enum": ["rice", "maize", "soybeans", "beans", "peas", "groundnuts", "cowpeas", "banana", "mango", "grapges", "watermelon", "apple", "orange", "cotton", "coffee"],
+                    "description": "Name of the class. Must be one of ['rice', 'maize', 'soybeans', 'beans', 'peas', 'groundnuts', 'cowpeas', 'banana', 'mango', 'grapges', 'watermelon', 'apple', 'orange', 'cotton', 'coffee']"
                 }
                 },
                 "required": ["feature", "class_label"]

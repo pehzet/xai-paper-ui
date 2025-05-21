@@ -17,8 +17,9 @@ def decision_new():
         st.session_state.decision_times[str(st.session_state.decision_no)]["start"] = datetime.now().isoformat()
     st.progress(0.1 * int(st.session_state.decision_no))
     st.markdown(f"<p style='font-size: 20px;'> Decision {st.session_state.decision_no} of 10 </p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below. Use the prediction to help you decide.<p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list and click on the Submit button. For further information check the diagrams on the top right. <p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below and the charts on the right.<p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 20px;'> Use the prediction on the left in the center to help you decide.<p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list below and click on the Submit button. For further information check the diagrams on the top right.<p>", unsafe_allow_html=True)
     row1 = st.container(border=True)
     col1_1, col1_2 = st.columns(2, gap="small", border=True)
     with row1:

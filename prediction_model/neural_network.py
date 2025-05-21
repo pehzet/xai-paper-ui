@@ -11,7 +11,7 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Dropout
 
-FORCE_TRAIN = 0
+FORCE_TRAIN = 1
 
 
 class CropPredictor:
