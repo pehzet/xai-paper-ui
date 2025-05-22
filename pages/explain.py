@@ -11,9 +11,10 @@ def show_explanation():
     test_case = st.session_state.test_case  # sollte ein dict oder DataFrame-kompatibel sein
     # Optional: Lob, wenn korrekt
     if selected_label == true_label:
-
         st.success("Contragulations! Your choice is correct! 🎉")
+        st.session_state.current_choice_is_correct = True
     else:
+        st.session_state.current_choice_is_correct = False
         st.error("Your choice is incorrect. Here is an Explanation")
     # Zeige Antwortvergleich
     st.markdown(f"**Your answer:** {selected_label}")

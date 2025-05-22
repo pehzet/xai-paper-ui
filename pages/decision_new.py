@@ -18,8 +18,9 @@ def decision_new():
     st.progress(0.1 * int(st.session_state.decision_no))
     st.markdown(f"<p style='font-size: 20px;'> Decision {st.session_state.decision_no} of 10 </p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below and the charts on the right.<p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 20px; color:red;'> On the lower right, you find the Cropify Decision Assistant that you are supposed to interact with to support your decision-making.<p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px;'> Use the prediction on the left in the center to help you decide.<p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list below and click on the Submit button. For further information check the diagrams on the top right.<p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list and click on the Submit button. For further information check the diagrams on the top right. <p>", unsafe_allow_html=True)
     row1 = st.container(border=True)
     col1_1, col1_2 = st.columns(2, gap="small", border=True)
     with row1:
@@ -27,15 +28,18 @@ def decision_new():
             test_case_table()
         with col1_2:
             show_images()
-    row2 = st.container(border=True)
-    with row2:
-        prediction_element()
+    # row2 = st.container(border=True)
+    # with row2:
+    #     prediction_element()
     row3 = st.container(border=True)
+
     col3_1, col3_2 = st.columns(2, gap="small", border=True)
     with row3:
         with col3_1:
             decision_dropdown()
-        with col3_2:
-            st.empty()
+        # with col3_2:
+        #     st.write("Chatbot - enter message below. Scroll down if you don't see the input field.")
+            
             # chat_page()
+
     st.session_state.new_decision = False

@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 from prediction_model.model_interface import predict
 import random
+import math
 from icecream import ic
 FEATURE_METADATA = {
     "N": {"unit": "kg/ha", "min": 0, "max": 140, "info": "Nitrogen content in the fertilizer (kg/ha)"},
@@ -75,22 +76,36 @@ def test_case_table():
 
 
 def decision_dropdown():
-    options = ['rice', 'soybeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
-    options = sorted(options)
-    # Create buttons in each column
-    decision = st.selectbox("Selection", options, placeholder="Select the crop to plant", index=None, label_visibility="collapsed")
-    submit = st.button("Submit")
-    if submit:
 
-        if decision is None:
+
+
+
+    options = [("rice", 0.01), ("soybeans", 0.08), ("banana", 0.03), ("beans", 0.04), ("cowpeas", 0.05), ("orange", 0.06),
+              ("maize", 0.07), ("coffee", 0.08), ("peas", 0.09), ("groundnuts", 0.10), ("mango", 0.11),
+              ("watermelon", 0.12), ("grapes", 0.13), ("apple", 0.14), ("cotton", 0.15)]
+
+    options_for_display = [f"{crop} ({math.ceil(prob*100)} %)" for crop, prob in options]
+    # sort by name
+    options_for_display.sort()
+
+    selection = st.selectbox(
+        "Selection",
+        options_for_display,
+        index=None,
+        placeholder="Select the crop to plant",
+        label_visibility="collapsed"
+    )
+
+
+    if st.button("Submit"):
+        if selection is None:
             st.error("Please select a crop to plant.")
         else:
+            print("Correct Choices:", st.session_state.correct_choices)
+            decision = selection.split(" (")[0]
+            print(decision)
             st.session_state["choices"][st.session_state.decision_no] = decision
-            # st.session_state.decision_no += 1
             st.session_state.decision_made = True
-            # if st.session_state.decision_no > 10    :
-            #     st.session_state["page"] = "thanks"
-            # st.rerun()
 
 def decision():
     if st.session_state.new_decision:
