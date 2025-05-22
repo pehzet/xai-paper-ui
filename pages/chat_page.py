@@ -85,6 +85,8 @@ def chat_page():
 
     def render_chat(msgs, new_msg = None):
         with chat_placeholder.container(height=250, border=False):
+            with st.chat_message("assistant"):
+                st.markdown("If you have any questions, feel free to ask me.")
             for msg in msgs:
                 with st.chat_message(msg["role"]):
                     if msg["is_img"]:

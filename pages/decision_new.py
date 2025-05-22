@@ -11,6 +11,7 @@ def prediction_element():
     st.markdown("The Neural Network predicts with an **accuracy of 85 %**, based on the data above, that the best crop to plant is:")
     st.markdown(f"<p style='font-size: 30px;'> {st.session_state.prediction}</p>", unsafe_allow_html=True)
 def decision_new():
+
     if not str(st.session_state.decision_no) in st.session_state.decision_times:
         st.session_state.decision_times[str(st.session_state.decision_no)] = {}
     if "start" not in st.session_state.decision_times[str(st.session_state.decision_no)]:
@@ -38,8 +39,7 @@ def decision_new():
         with col3_1:
             decision_dropdown()
         with col3_2:
-            st.write("Chatbot - enter message below. Scroll down if you don't see the input field.")
-            
+            st.markdown("**Cropify Decision Assistant** (scroll down to see the input field )")
             chat_page()
 
     st.session_state.new_decision = False
