@@ -25,6 +25,7 @@ import uuid
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+
 def init():
     if "assistant" not in st.session_state:
         st.session_state.assistant = XAIChatbot(decision_no=1)
@@ -52,8 +53,12 @@ def init():
         st.session_state.decision_completed = False
     if "correct_choices" not in st.session_state:
         st.session_state.correct_choices = 0
+    if "current_choice_is_correct" not in st.session_state:
+        st.session_state.current_choice_is_correct = None
     if "page" not in st.session_state:
         st.session_state.page = "welcome"
+    if "char_count" not in st.session_state:
+        st.session_state.char_count = 0
     if not "experiment_start" in st.session_state:
         st.session_state.experiment_start = datetime.now().isoformat()
 
@@ -112,18 +117,24 @@ def close_decision():
     st.session_state.chat_history[st.session_state.decision_no] = st.session_state.assistant.get_messages()
     st.session_state["page"] = "survey"
     st.session_state.decision_completed = False
+    st.session_state.char_count = 0
+
+
     save_session_state()
     st.rerun()
 
 
 def complete_decision():
-    
+
     st.session_state.decision_no += 1
     if st.session_state.decision_no > 10:
         st.session_state["page"] = "thanks"
     else:
         st.session_state["page"] = "chat"
-
+    if st.session_state.current_choice_is_correct:
+        st.session_state.correct_choices += 1
+        print("Correct Choices:", st.session_state.correct_choices)
+        st.session_state.current_choice_is_correct = None
     # st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
     save_session_state()
     st.session_state.decision_completed = False

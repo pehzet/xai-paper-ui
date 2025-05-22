@@ -96,8 +96,9 @@ def chat_page():
                 with st.chat_message("user"):
                     st.markdown(new_msg)
     render_chat(msgs)
-    if prompt := st.chat_input("I´m your Decision Assistant. How can I support you?"):
-   
+    if prompt := st.chat_input("I'm your Decision Assistant. How can I support you?"):
+        st.session_state.char_count += len(prompt)
+
         # with st.chat_message("user"):
         #     st.markdown(prompt)
         render_chat(msgs, prompt)

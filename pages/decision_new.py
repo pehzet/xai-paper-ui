@@ -28,14 +28,18 @@ def decision_new():
             test_case_table()
         with col1_2:
             show_images()
-    row2 = st.container(border=True)
-    with row2:
-        prediction_element()
+    # row2 = st.container(border=True)
+    # with row2:
+    #     prediction_element()
     row3 = st.container(border=True)
+
     col3_1, col3_2 = st.columns(2, gap="small", border=True)
     with row3:
         with col3_1:
             decision_dropdown()
         with col3_2:
+            st.write("Chatbot - enter message below. Scroll down if you don't see the input field.")
+            
             chat_page()
+
     st.session_state.new_decision = False
