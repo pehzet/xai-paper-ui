@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import os
 from datetime import datetime
-from prediction_model.model_interface import predict
+from prediction_model.model_interface import predict, predict_probabilities
 import random
 import math
 from icecream import ic
@@ -77,12 +77,12 @@ def test_case_table():
 
 def decision_dropdown():
 
+    probs = predict_probabilities(st.session_state.test_case)
 
-
-
-    options = [("rice", 0.01), ("soybeans", 0.08), ("banana", 0.03), ("beans", 0.04), ("cowpeas", 0.05), ("orange", 0.06),
-              ("maize", 0.07), ("coffee", 0.08), ("peas", 0.09), ("groundnuts", 0.10), ("mango", 0.11),
-              ("watermelon", 0.12), ("grapes", 0.13), ("apple", 0.14), ("cotton", 0.15)]
+    # options = [("rice", 0.01), ("soybeans", 0.08), ("banana", 0.03), ("beans", 0.04), ("cowpeas", 0.05), ("orange", 0.06),
+    #           ("maize", 0.07), ("coffee", 0.08), ("peas", 0.09), ("groundnuts", 0.10), ("mango", 0.11),
+    #           ("watermelon", 0.12), ("grapes", 0.13), ("apple", 0.14), ("cotton", 0.15)]
+    options = [(crop, probs.get(crop, 0)) for crop in probs.keys()]
 
     options_for_display = [f"{crop} ({math.ceil(prob*100)} %)" for crop, prob in options]
     # sort by name
