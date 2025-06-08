@@ -155,6 +155,8 @@ def main():
         decision_new()
         if st.session_state.decision_made:
             close_decision()
+    elif st.session_state["page"] == "wait":
+        show_wait()
     elif st.session_state["page"] == "survey":
         show_survey()
 
