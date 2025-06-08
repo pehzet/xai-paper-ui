@@ -13,6 +13,7 @@ from pages.thanks import thanks
 from pages.chat_page import chat_page
 from pages.decision_new import decision_new
 from pages.survey import show_survey
+from pages.wait import show_wait
 from pages.explain import show_explanation
 from chatbot import XAIChatbot
 
@@ -129,6 +130,8 @@ def complete_decision():
     st.session_state.decision_no += 1
     if st.session_state.decision_no > 10:
         st.session_state["page"] = "thanks"
+    elif st.session_state.decision_no == 4:
+        st.session_state["page"] = "wait"
     else:
         st.session_state["page"] = "chat"
     if st.session_state.current_choice_is_correct:
