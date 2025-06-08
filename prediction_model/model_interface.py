@@ -49,7 +49,31 @@ def predict(data):
     except Exception as e:
         return {"error": str(e)}
 
+def predict_probabilities(data):
+    """    Predicts the probability distribution for all classes for the given input data.
+    """
+    try:
+        # Handle input data (string or dictionary)
+        if isinstance(data, str):
+            data = json.loads(data)
+        elif not isinstance(data, dict):
+            raise ValueError(f"Invalid data type: {type(data)}")
 
+        # Extract required parameters
+        N = data["N"]
+        P = data["P"]
+        K = data["K"]
+        temperature = data["temperature"]
+        humidity = data["humidity"]
+        ph = data["ph"]
+        rainfall = data["rainfall"]
+
+        # Get probability predictions from the model
+        probabilities = predictor.predict_probabilities(N, P, K, temperature, humidity, ph, rainfall)
+        return _numpy_to_native(probabilities)
+
+    except Exception as e:
+        return {"error": str(e)}
 
 def sum_feature(data):
     """

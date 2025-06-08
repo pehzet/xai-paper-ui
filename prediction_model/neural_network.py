@@ -206,6 +206,32 @@ class CropPredictor:
         y_prob = self.model.predict(X_processed, verbose=0)
         y = np.argmax(y_prob, axis=1)
         return self.label_encoder.inverse_transform(y)
+    
+    def predict_probabilities(self, N, P, K, temperature, humidity, ph, rainfall):
+        """
+        Predicts the probability distribution for all classes for the given input data.
+
+        Parameters:
+        - N, P, K, temperature, humidity, ph, rainfall: Input features
+
+        Returns:
+        - probabilities (dict): Dictionary with class labels as keys and probability percentages as values.
+        """
+        X = np.array([N, P, K, temperature, humidity, ph, rainfall]).reshape(1, -1)
+        
+        X_processed = self.preprocess_data(X, fit=False)
+        
+        # Get probability predictions from the model
+        y_prob = self.model.predict(X_processed, verbose=0)[0]
+        
+        # Create dictionary with class labels and their percentages
+        class_labels = self.label_encoder.classes_
+        probabilities = {}
+        
+        for i, label in enumerate(class_labels):
+            probabilities[label] = float(y_prob[i])
+        
+        return probabilities
 
     def sum_feature(self, feature, by_class=False):
         """
