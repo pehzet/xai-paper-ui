@@ -22,8 +22,24 @@ def is_base64_image(data: str) -> bool:
     Überprüft, ob der gegebene String ein Base64-enkodiertes Bild ist.
     """
     try:
-        xy = base64.b64decode(data)
-        return True
+        if not data.startswith(('data:image/', '/9j/', 'iVBORw0KGgo', 'R0lGODlh', 'UklGR')):
+            return False
+        
+        if data.startswith('data:image/'):
+            data = data.split(',', 1)[1]
+        
+        decoded = base64.b64decode(data, validate=True)
+        
+        img_headers = [
+            b'\xff\xd8\xff',  # JPEG
+            b'\x89PNG\r\n\x1a\n',  # PNG
+            b'GIF87a',  # GIF87a
+            b'GIF89a',  # GIF89a
+            b'RIFF'  # WEBP (beginnt mit RIFF)
+        ]
+        
+        return any(decoded.startswith(header) for header in img_headers)
+        
     except Exception:
         return False
 def _remove_images_from_text(text):
@@ -90,6 +106,7 @@ def chat_page():
             for msg in msgs:
                 with st.chat_message(msg["role"]):
                     if msg["is_img"]:
+                        print(msg["content"])
                         img = render_image(msg["content"])
                         st.image(img)
                     else:
