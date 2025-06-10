@@ -56,6 +56,10 @@ INSTRUCTIONS
 - Provide factual, data-driven explanations when requested. Avoid speculation or personal judgment.
 - Use SHAP analysis only if the user explicitly asks for reasons, explanations, or interpretability related to a prediction.
 - Favor clarity and simplicity in explanations. Avoid jargon unless previously introduced.
+- Provide the information below if the user asks for them.
 
 CURRENT DECISION INPUT VALUES
 {{ decision_values }}
+
+CURRENT LABEL LIKELIHOODS:
+{{ predictions }}

@@ -4,7 +4,7 @@ import json
 import os
 import base64
 import sys
-from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation
+from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation, predict_probabilities
 from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 import pandas as pd
 import streamlit as st
@@ -30,7 +30,9 @@ class XAIChatbot:
     def init_messages(self):
         self.messages = []
         decision_values = self._get_decision_case()
-        instruction_message = self.create_instruction_message(placeholder="{{ decision_values }}", placeholder_value=decision_values)
+        predictions = predict_probabilities(decision_values)
+  
+        instruction_message = self.create_instruction_message(placeholder=["{{ decision_values }}", "{{ predictions }}"], placeholder_value=[decision_values, predictions])
         self.messages.append(instruction_message)
         self.messages.append(self.create_img_message())
 
@@ -41,11 +43,15 @@ class XAIChatbot:
         with open("function_config.json", "r") as f:
             function_config = json.load(f)
         return function_config
-    def create_instruction_message(self, placeholder:str=None, placeholder_value:str=None):
+
+    def create_instruction_message(self, placeholder:list=None, placeholder_value:list=None):
         with open("instructions.txt", "r", encoding="utf-8") as f:
             message = f.read()
         if placeholder:
-            message = message.replace(placeholder, placeholder_value)
+            for p, v in zip(placeholder, placeholder_value):
+                p = str(p)
+                v = str(v)
+                message = message.replace(p, v)
         return {
             "role": "system",
             "content": message
