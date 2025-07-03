@@ -63,7 +63,7 @@ def test_case_table():
     if st.session_state.new_decision:
         decision_id = get_decision_id()
         st.session_state.decision_id = decision_id
-        st.session_state.test_case = get_test_case(decision_id)
+        
       
         prediction = predict(st.session_state.test_case)
  
@@ -73,10 +73,19 @@ def test_case_table():
     st.table(test_case_df)
 
 
-
+def get_decision_id():
+    if st.session_state.decision_no <= 3:
+        decision_id = st.session_state.decision_no 
+    else:
+        while True:
+            decision_id = random.randint(4, 10)
+            if decision_id not in st.session_state.done_decision_ids:
+                break
+    return decision_id
 
 def decision_dropdown():
-
+    decision_id = get_decision_id()
+    st.session_state.test_case = get_test_case(decision_id)
     probs = predict_probabilities(st.session_state.test_case)
 
     # options = [("rice", 0.01), ("soybeans", 0.08), ("banana", 0.03), ("beans", 0.04), ("cowpeas", 0.05), ("orange", 0.06),
@@ -84,7 +93,8 @@ def decision_dropdown():
     #           ("watermelon", 0.12), ("grapes", 0.13), ("apple", 0.14), ("cotton", 0.15)]
     options = [(crop, probs.get(crop, 0)) for crop in probs.keys()]
 
-    options_for_display = [f"{crop} ({math.ceil(prob*100)} %)" for crop, prob in options]
+    # options_for_display = [f"{crop} ({math.ceil(prob*100)} %)" for crop, prob in options]
+    options_for_display = [f"{crop}" for crop, prob in options]
     # sort by name
     options_for_display.sort()
 
@@ -100,6 +110,8 @@ def decision_dropdown():
     if st.button("Submit"):
         if selection is None:
             st.error("Please select a crop to plant.")
+        if st.session_state.char_count < 50:
+            st.error("Please enter at least 50 characters to the chat.")
         else:
             print("Correct Choices:", st.session_state.correct_choices)
             decision = selection.split(" (")[0]
@@ -114,7 +126,7 @@ def decision():
         st.session_state.prediction = predict(st.session_state.test_case)
     st.write(f"**Decision {st.session_state.decision_no}**")
     st.write("Task: Select the crop to plant based on the given data in the table below. Use the prediction to help you decide.")
-    st.write(f"Prediction of the Neural Network (85 % Accurancy): **{st.session_state.prediction}**")
+    # st.write(f"Prediction of the Neural Network (85 % Accurancy): **{st.session_state.prediction}**")
     test_case_df = get_test_case_with_metadata(st.session_state.test_case)
     st.table(test_case_df)
     

@@ -11,3 +11,5 @@ def show_wait():
     time.sleep(5)
     st.session_state["page"] = "chat"
     st.rerun()
+
+

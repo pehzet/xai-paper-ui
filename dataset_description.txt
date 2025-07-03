@@ -1,0 +1,8 @@
+Number of Entries: 1697
+Columns: ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall', 'label']
+Label Column: label
+Number of Labels: 15
+Label Distribution: {'rice': 139, 'soybeans': 130, 'banana': 130, 'beans': 125, 'cowpeas': 122, 'orange': 122, 'maize': 119, 'coffee': 110, 'peas': 100, 'groundnuts': 100, 'mango': 100, 'watermelon': 100, 'grapes': 100, 'apple': 100, 'cotton': 100}
+Numeric Columns: ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
+Ranges of Numeric Columns: {'N': (np.int64(0), np.int64(140)), 'P': (np.int64(5), np.int64(145)), 'K': (np.int64(5), np.int64(205)), 'temperature': (np.float64(8.825674745), np.float64(41.94865736)), 'humidity': (np.float64(14.25803981), np.float64(94.96419851)), 'ph': (np.float64(3.504752314), np.float64(9.93509073)), 'rainfall': (np.float64(5.31450727), np.float64(298.5601175))}
+Missing Values: {'N': 0, 'P': 0, 'K': 0, 'temperature': 0, 'humidity': 0, 'ph': 0, 'rainfall': 0, 'label': 0}

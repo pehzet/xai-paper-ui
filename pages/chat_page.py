@@ -100,10 +100,13 @@ def chat_page():
     chat_placeholder = st.empty()
 
     def render_chat(msgs, new_msg = None):
-        with chat_placeholder.container(height=250, border=False):
+        with chat_placeholder.container(height=500, border=False): #height=250,
+            with st.chat_message("assistant"):
+                st.markdown("If you have any questions, feel free to ask me.")
             for msg in msgs:
                 with st.chat_message(msg["role"]):
                     if msg["is_img"]:
+                    
                         img = render_image(msg["content"])
                         st.image(img)
                     else:
@@ -112,8 +115,9 @@ def chat_page():
                 with st.chat_message("user"):
                     st.markdown(new_msg)
     render_chat(msgs)
-    if prompt := st.chat_input("I´m your Decision Assistant. How can I support you?"):
-   
+    if prompt := st.chat_input("I'm your Decision Assistant. How can I support you?"):
+        st.session_state.char_count += len(prompt)
+
         # with st.chat_message("user"):
         #     st.markdown(prompt)
         render_chat(msgs, prompt)

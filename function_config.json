@@ -19,31 +19,7 @@
             }
         }
     },
-    {
-        "type": "function",
-        "function": {
-            "name": "generate_shap_diagram",
-            "description": "Get a diagram for the SHAP values.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
-                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
-                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "number", "description": "Relative humidity in %."},
-                    "ph": {"type": "number", "description": "PH value of the soil."},
-                    "rainfall": {"type": "number", "description": "rainfall in mm."},
-                    "plot_type": {
-                        "type": "string",
-                        "enum": ["waterfall", "force"],
-                        "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'. Use Waterfall as default"
-                    }
-                },
-                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall",  "plot_type"]
-            }
-        }
-    },
+
     {
         "type": "function",
         "function": {
@@ -64,31 +40,7 @@
             }
         }
     },
-    {
-        "type": "function",
-        "function": {
-            "name": "generate_shap_diagram",
-            "description": "Get a diagram for the SHAP values.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
-                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
-                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "number", "description": "Relative humidity in %."},
-                    "ph": {"type": "number", "description": "PH value of the soil."},
-                    "rainfall": {"type": "number", "description": "rainfall in mm."},
-                    "plot_type": {
-                        "type": "string",
-                        "enum": ["waterfall", "force"],
-                        "description": "Type of SHAP plot to generate. Choose between 'waterfall' and 'force'. Use Waterfall as default"
-                    }
-                },
-                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall",  "plot_type"]
-            }
-        }
-    },
+
     {
         "type": "function",
         "function": {

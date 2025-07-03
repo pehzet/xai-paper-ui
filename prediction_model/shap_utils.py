@@ -50,8 +50,8 @@ class SHAPUtility:
             predictions = predictor.model.predict(data, verbose=0)
             return predictions
 
-        # Initialize SHAP KernelExplainer
-        explainer = shap.KernelExplainer(model_predict, background)
+        # Initialize SHAP DeepExplainer
+        explainer = shap.DeepExplainer(model_predict, background)
         return explainer
 
     @staticmethod
@@ -227,7 +227,7 @@ class SHAPUtility:
         # file_path = os.path.join("images", f"{file_prefix}_{timestamp}.png")
         # file_path = os.path.join("images", f"{file_prefix}.png")
         file_path = f"{file_prefix}.png"
-        plt.savefig(file_path, bbox_inches='tight')
+        # plt.savefig(file_path, bbox_inches='tight')
         plt.close()
 
         with open(file_path, 'rb') as image_file:

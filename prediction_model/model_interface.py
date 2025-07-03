@@ -48,7 +48,7 @@ def predict(data):
 
     except Exception as e:
         return {"error": str(e)}
-    
+
 def predict_probabilities(data):
     """    Predicts the probability distribution for all classes for the given input data.
     """
@@ -74,7 +74,6 @@ def predict_probabilities(data):
 
     except Exception as e:
         return {"error": str(e)}
-
 
 def sum_feature(data):
     """
