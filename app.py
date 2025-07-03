@@ -128,9 +128,9 @@ def close_decision():
 def complete_decision():
 
     st.session_state.decision_no += 1
-    if st.session_state.decision_no > 10:
+    if st.session_state.decision_no > 4:
         st.session_state["page"] = "thanks"
-    elif st.session_state.decision_no == 4:
+    elif st.session_state.decision_no == 2:
         st.session_state["page"] = "wait"
     else:
         st.session_state["page"] = "chat"

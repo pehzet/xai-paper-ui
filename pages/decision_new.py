@@ -17,14 +17,14 @@ def decision_new():
         st.session_state.decision_times[str(st.session_state.decision_no)] = {}
     if "start" not in st.session_state.decision_times[str(st.session_state.decision_no)]:
         st.session_state.decision_times[str(st.session_state.decision_no)]["start"] = datetime.now().isoformat()
-    st.progress(0.1 * int(st.session_state.decision_no))
-    st.markdown(f"<p style='font-size: 20px;'> Decision {st.session_state.decision_no} of 10 </p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below and the SHAP diagrams on the top right.<p>", unsafe_allow_html=True)
+    st.progress(0.25 * int(st.session_state.decision_no))
+    st.markdown(f"<p style='font-size: 20px;'> Decision {st.session_state.decision_no} of 4 </p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below and the feature importance diagram on the top right.<p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px; color:red;'> On the lower right, you find the Cropify Decision Assistant that you are supposed to interact with to support your decision-making.<p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list and click on the Submit button. <p>", unsafe_allow_html=True)
     row1 = st.container(border=True)
     with row1:
-        st.markdown("Select the crop you think is best from the dropdown list below. The percentages in brackets show the AI's predicted likelihood for each option.")
+        st.markdown("Select the crop you think is best from the dropdown list below.")
         decision_dropdown()
     row2 = st.container(border=True)
     col1_1, col1_2 = st.columns(2, gap="small", border=True)
