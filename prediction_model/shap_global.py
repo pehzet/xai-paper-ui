@@ -24,8 +24,8 @@ import matplotlib.pyplot as plt
 
 def plot_global_shap_bar(
     predictor,
-    background_size: int = 100,
-    sample_size: int = 500,
+    background_size: int = 2000,
+    sample_size: int = 2000,
     save_path: str | None = "shap_global_bar.png",
 ):
     """Erstellt ein Bar‑Chart der **globalen** Feature‑Wichtigkeit.
