@@ -110,8 +110,7 @@ def decision_dropdown():
     if st.button("Submit"):
         if selection is None:
             st.error("Please select a crop to plant.")
-        if st.session_state.char_count < 50:
-            st.error("Please enter at least 50 characters to the chat.")
+
         else:
             print("Correct Choices:", st.session_state.correct_choices)
             decision = selection.split(" (")[0]
