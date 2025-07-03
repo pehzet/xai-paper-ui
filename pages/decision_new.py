@@ -1,6 +1,7 @@
 from .chat_page import chat_page
 from .image_page import show_images
 from .decision import test_case_table, decision_dropdown
+from .data_table import show_data_table
 import streamlit as st
 from datetime import datetime
 
@@ -22,8 +23,12 @@ def decision_new():
     st.markdown(f"<p style='font-size: 20px; color:red;'> On the lower right, you find the Cropify Decision Assistant that you are supposed to interact with to support your decision-making.<p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list and click on the Submit button. <p>", unsafe_allow_html=True)
     row1 = st.container(border=True)
-    col1_1, col1_2 = st.columns(2, gap="small", border=True)
     with row1:
+        st.markdown("Select the crop you think is best from the dropdown list below. The percentages in brackets show the AI's predicted likelihood for each option.")
+        decision_dropdown()
+    row2 = st.container(border=True)
+    col1_1, col1_2 = st.columns(2, gap="small", border=True)
+    with row2:
         with col1_1:
             test_case_table()
         with col1_2:
@@ -36,8 +41,7 @@ def decision_new():
     col3_1, col3_2 = st.columns(2, gap="small", border=True)
     with row3:
         with col3_1:
-            st.markdown("Select the crop you think is best from the dropdown list below. The percentages in brackets show the AI's predicted likelihood for each option.")
-            decision_dropdown()
+            show_data_table()
         with col3_2:
             st.markdown("**Cropify Decision Assistant** (scroll down to see the input field )")
             chat_page()

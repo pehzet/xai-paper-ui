@@ -50,8 +50,8 @@ class SHAPUtility:
             predictions = predictor.model.predict(data, verbose=0)
             return predictions
 
-        # Initialize SHAP KernelExplainer
-        explainer = shap.KernelExplainer(model_predict, background)
+        # Initialize SHAP DeepExplainer
+        explainer = shap.DeepExplainer(model_predict, background)
         return explainer
 
     @staticmethod

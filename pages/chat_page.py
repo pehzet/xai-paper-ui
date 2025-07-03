@@ -100,13 +100,13 @@ def chat_page():
     chat_placeholder = st.empty()
 
     def render_chat(msgs, new_msg = None):
-        with chat_placeholder.container(height=250, border=False):
+        with chat_placeholder.container(height=500, border=False): #height=250,
             with st.chat_message("assistant"):
                 st.markdown("If you have any questions, feel free to ask me.")
             for msg in msgs:
                 with st.chat_message(msg["role"]):
                     if msg["is_img"]:
-                        print(msg["content"])
+                    
                         img = render_image(msg["content"])
                         st.image(img)
                     else:

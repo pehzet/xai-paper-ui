@@ -5,7 +5,6 @@ import os
 import base64
 import sys
 from prediction_model.model_interface import predict, sum_feature, mean_feature, quantile_feature, variance_feature, std_feature, min_feature, max_feature, correlation, class_distribution, feature_values_for_class, feature_distribution, run_simulation, predict_probabilities
-from prediction_model.shap_interface import predict_shap_values, generate_shap_diagram
 import pandas as pd
 import streamlit as st
 from icecream import ic
@@ -66,29 +65,26 @@ class XAIChatbot:
             file_name_1 = f"case{decision_no}_global.png"
             file_name_2 = f"case{decision_no}_local.png"
         base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
-        image1_path = os.path.join(base_dir, "images", file_name_1)
-        image2_path = os.path.join(base_dir, "images", file_name_2)
-        img1 = self.encode_image(image1_path)
-        img2 = self.encode_image(image2_path)
+        # image1_path = os.path.join(base_dir, "images", file_name_1)
+        # image2_path = os.path.join(base_dir, "images", file_name_2)
+        global_image_path = os.path.join(base_dir, "images", "shap_global_bar.png")
+        # img1 = self.encode_image(image1_path)
+        # img2 = self.encode_image(image2_path)
+        global_img = self.encode_image(global_image_path)
         message = {
             "role": "user",
             "content": [
         {
           "type": "text",
-          "text": "Here are the two images with SHAP values. The first is a global explanation and the second is a local one. Don't go into it for now. Only when I explicitly ask for it.",
+          "text": "Here is the image with a the global feature importance based on SHAP values. Don't go into it for now. Only when I explicitly ask for it.",
         },
         {
           "type": "image_url",
           "image_url": {
-            "url":  f"data:image/png;base64,{img1}"
+            "url":  f"data:image/png;base64,{global_img}"
           },
         },
-               {
-          "type": "image_url",
-          "image_url": {
-            "url":  f"data:image/png;base64,{img2}"
-          },
-        },
+              
       ],
         }
         return message
@@ -107,17 +103,17 @@ class XAIChatbot:
             if fn_name == "predict":
                 output = predict(fn_args)
 
-            elif fn_name == "generate_shap_diagram":
-                # Keep the SHAP diagram logic example, ignoring actual implementation details
-                shap_result = generate_shap_diagram(fn_args)
-                # If the function returns a dict with a key "shap_diagram", use that
-                if isinstance(shap_result, dict):
-                    output = shap_result.get("shap_diagram")
-                else:
-                    # Otherwise just return the whole result
-                    output = shap_result
-                # Remember the ID in case you need to reference it for images
-                self._tool_call_id_with_image = tool_call.id
+            # elif fn_name == "generate_shap_diagram":
+            #     # Keep the SHAP diagram logic example, ignoring actual implementation details
+            #     shap_result = generate_shap_diagram(fn_args)
+            #     # If the function returns a dict with a key "shap_diagram", use that
+            #     if isinstance(shap_result, dict):
+            #         output = shap_result.get("shap_diagram")
+            #     else:
+            #         # Otherwise just return the whole result
+            #         output = shap_result
+            #     # Remember the ID in case you need to reference it for images
+            #     self._tool_call_id_with_image = tool_call.id
             elif fn_name == "sum_feature":
                 output = sum_feature(fn_args)
 
