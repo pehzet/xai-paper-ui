@@ -10,7 +10,7 @@ def show_data_table():
     FILE_PATH = Path("prediction_model/data/optimal_ranges.csv")
 
     table = pd.read_csv(FILE_PATH, header=[0, 1], index_col=0)
-
+    table = table.round(2) #.astype(int)
     table.index.name = ""                   
     table.columns.names = ["Feature", ""]    
     UNIT_MAP = {

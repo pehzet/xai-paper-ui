@@ -57,8 +57,10 @@ def get_test_case_with_metadata(test_case):
                 "Max": metadata["max"],
                 "Info": metadata["info"]
             })
-
-    return pd.DataFrame(test_case_data).set_index("Feature")
+    df = pd.DataFrame(test_case_data).set_index("Feature")
+    df = df.round(2)
+    
+    return df
 def test_case_table():
     if st.session_state.new_decision:
         decision_id = get_decision_id()
@@ -70,7 +72,7 @@ def test_case_table():
         st.session_state.prediction = prediction
         st.session_state.predicted_labels.append(prediction)
     test_case_df = get_test_case_with_metadata(st.session_state.test_case)
-    st.table(test_case_df)
+    st.dataframe(test_case_df)
 
 
 def get_decision_id():
