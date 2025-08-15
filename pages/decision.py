@@ -59,6 +59,8 @@ def get_test_case_with_metadata(test_case):
             })
     df = pd.DataFrame(test_case_data).set_index("Feature")
     df = df.round(2)
+        df = df
+    df = df.round(2)
     return df
 def test_case_table():
     if st.session_state.new_decision:
@@ -72,7 +74,6 @@ def test_case_table():
         st.session_state.predicted_labels.append(prediction)
     test_case_df = get_test_case_with_metadata(st.session_state.test_case)
     st.dataframe(test_case_df)
-
 
 
 def init_new_decision():
