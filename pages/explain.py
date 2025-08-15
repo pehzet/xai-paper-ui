@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import pandas as pd
 import os
+from .data_table import show_data_table
 def show_explanation():
     # Labels und Testdaten aus dem Session State
 
@@ -19,7 +20,7 @@ def show_explanation():
     # Zeige Antwortvergleich
     st.markdown(f"**Your answer:** {selected_label}")
     st.markdown(f"**Correct answer:** {true_label}")
-
+    st.markdown("__"*20)
     # Zeige Testdaten als Tabelle
     st.markdown("**Case Features:**")
     df = pd.DataFrame(test_case.items(), columns=["Feature", "Value"])
@@ -30,7 +31,10 @@ def show_explanation():
             width="medium"
         )
     })
-
+    st.markdown("__"*20)
+    # zeige Gesamtdaten tabelle
+    show_data_table()
+    st.markdown("__"*20)
     # Lade Erklärung aus JSON-Datei
 
     current_dir = os.path.dirname(os.path.abspath(__file__))

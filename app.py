@@ -8,10 +8,10 @@ st.set_page_config(layout="wide", page_title=title, initial_sidebar_state="colla
 
 from pages.welcome import welcome_page
 from pages.image_page import show_images
-from pages.decision import decision
+# from pages.decision import decision
 from pages.thanks import thanks
 from pages.chat_page import chat_page
-from pages.decision_new import decision_new
+from pages.decision_new import decision_new, init_new_decision
 from pages.survey import show_survey
 from pages.wait import show_wait
 from pages.explain import show_explanation
@@ -146,12 +146,13 @@ def complete_decision():
 
 def main():
 
-    
     if st.session_state["page"] == "welcome":
         welcome_page()
     elif st.session_state["page"] == "chat":
         if st.session_state.new_decision:
-            st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
+            init_new_decision()
+            st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_id)
+
         decision_new()
         if st.session_state.decision_made:
             close_decision()

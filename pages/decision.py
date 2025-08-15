@@ -19,11 +19,11 @@ FEATURE_METADATA = {
 }
 
 def get_decision_id():
-    if st.session_state.decision_no <= 3:
+    if st.session_state.decision_no <= 1:
         decision_id = st.session_state.decision_no 
     else:
         while True:
-            decision_id = random.randint(4, 10)
+            decision_id = random.randint(2, 10)
             if decision_id not in st.session_state.done_decision_ids:
                 break
     return decision_id
@@ -62,8 +62,8 @@ def get_test_case_with_metadata(test_case):
     return df
 def test_case_table():
     if st.session_state.new_decision:
-        decision_id = get_decision_id()
-        st.session_state.decision_id = decision_id
+        # decision_id = get_decision_id()
+        # st.session_state.decision_id = decision_id
         
       
         prediction = predict(st.session_state.test_case)
@@ -74,19 +74,17 @@ def test_case_table():
     st.dataframe(test_case_df)
 
 
-def get_decision_id():
-    if st.session_state.decision_no <= 3:
-        decision_id = st.session_state.decision_no 
-    else:
-        while True:
-            decision_id = random.randint(4, 10)
-            if decision_id not in st.session_state.done_decision_ids:
-                break
-    return decision_id
+
+def init_new_decision():
+    if st.session_state.new_decision:
+        decision_id = get_decision_id()
+        st.session_state.test_case = get_test_case(decision_id)
+        st.session_state.decision_id = decision_id
+        st.session_state.new_decision = False
+
 
 def decision_dropdown():
-    decision_id = get_decision_id()
-    st.session_state.test_case = get_test_case(decision_id)
+
     probs = predict_probabilities(st.session_state.test_case)
 
     # options = [("rice", 0.01), ("soybeans", 0.08), ("banana", 0.03), ("beans", 0.04), ("cowpeas", 0.05), ("orange", 0.06),
@@ -119,27 +117,27 @@ def decision_dropdown():
             st.session_state["choices"][st.session_state.decision_no] = decision
             st.session_state.decision_made = True
 
-def decision():
-    if st.session_state.new_decision:
-        decision_id = get_decision_id()
-        st.session_state.test_case = get_test_case(decision_id)
-        st.session_state.prediction = predict(st.session_state.test_case)
-    st.write(f"**Decision {st.session_state.decision_no}**")
-    st.write("Task: Select the crop to plant based on the given data in the table below. Use the prediction to help you decide.")
-    # st.write(f"Prediction of the Neural Network (85 % Accurancy): **{st.session_state.prediction}**")
-    test_case_df = get_test_case_with_metadata(st.session_state.test_case)
-    st.table(test_case_df)
+# def decision():
+#     if st.session_state.new_decision:
+#         decision_id = get_decision_id()
+#         st.session_state.test_case = get_test_case(decision_id)
+#         st.session_state.prediction = predict(st.session_state.test_case)
+#     st.write(f"**Decision {st.session_state.decision_no}**")
+#     st.write("Task: Select the crop to plant based on the given data in the table below. Use the prediction to help you decide.")
+#     # st.write(f"Prediction of the Neural Network (85 % Accurancy): **{st.session_state.prediction}**")
+#     test_case_df = get_test_case_with_metadata(st.session_state.test_case)
+#     st.table(test_case_df)
     
-    st.session_state.new_decision = False
+#     st.session_state.new_decision = False
 
-    options = ['rice', 'soybeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
+#     options = ['rice', 'soybeans', 'banana', 'beans', 'cowpeas', 'orange', 'maize', 'coffee', 'peas', 'groundnuts', 'mango', 'watermelon', 'grapes', 'apple', 'cotton']
     
-    decision = st.selectbox("", options, placeholder="Select the crop to plant", index=None)
-    submit = st.button("Submit")
-    if submit:
-        st.session_state["choices"][st.session_state.decision_no] = decision
-        decision = None
-        # st.session_state.decision_no += 1
-        st.session_state.decision_made = True
+#     decision = st.selectbox("", options, placeholder="Select the crop to plant", index=None)
+#     submit = st.button("Submit")
+#     if submit:
+#         st.session_state["choices"][st.session_state.decision_no] = decision
+#         decision = None
+#         # st.session_state.decision_no += 1
+#         st.session_state.decision_made = True
 
     
