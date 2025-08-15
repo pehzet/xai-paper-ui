@@ -59,8 +59,6 @@ def get_test_case_with_metadata(test_case):
             })
     df = pd.DataFrame(test_case_data).set_index("Feature")
     df = df.round(2)
-        df = df
-    df = df.round(2)
     return df
 def test_case_table():
     if st.session_state.new_decision:
