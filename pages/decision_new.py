@@ -42,8 +42,8 @@ def decision_new():
         with col3_1:
             show_data_table()
         with col3_2:
-            # st.markdown("**Cropify Decision Assistant** (scroll down to see the input field )")
-            # chat_page()
+            st.markdown("**Cropify Decision Assistant** (scroll down to see the input field )")
+            chat_page()
             pass
 
     st.session_state.new_decision = False
