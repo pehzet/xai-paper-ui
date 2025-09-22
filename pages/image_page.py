@@ -16,5 +16,5 @@ def show_images():
 
     with col2:
         st.markdown("The image shows the overall feature importance for the decision-making process of the model. It highlights which features are generally most influential across all decisions.")
-        st.markdown("Click on the top right corner for fullscreen mode to see the image in detail.")
+        # st.markdown("Click on the top right corner for fullscreen mode to see the image in detail.")
     # st.image(image2_path, caption="Local Explanation", use_container_width=True)
