@@ -14,7 +14,7 @@ def welcome_page():
     valid = len(user_id) >= 6
 
     if not valid:
-        st.info("Your Prolific ID must be at least 6 characters long.")
+        st.info("Your Prolific ID must be at least 6 characters long. The field updates when you press Enter or leave the field.")
 
     # Button wird deaktiviert, wenn Eingabe nicht gültig
     if st.button("Start Experiment", disabled=not valid):
