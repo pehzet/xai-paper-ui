@@ -62,6 +62,8 @@ def init():
         st.session_state.char_count = 0
     if not "experiment_start" in st.session_state:
         st.session_state.experiment_start = datetime.now().isoformat()
+    if not "group_type" in st.session_state:
+        st.session_state.group_type = "Control/without-llm"
 
 
 def save_session_state():
