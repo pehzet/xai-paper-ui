@@ -60,6 +60,3 @@ INSTRUCTIONS
 
 CURRENT DECISION INPUT VALUES
 {{ decision_values }}
-
-CURRENT LABEL LIKELIHOODS:
-{{ predictions }}
