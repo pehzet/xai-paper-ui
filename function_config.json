@@ -2,48 +2,6 @@
     {
         "type": "function",
         "function": {
-            "name": "predict",
-            "description": "Predicts crops based on the characteristics entered.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
-                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
-                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "number", "description": "Relative humidity in %."},
-                    "ph": {"type": "number", "description": "PH value of the soil."},
-                    "rainfall": {"type": "number", "description": "rainfall in mm."}
-                },
-                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
-            }
-        }
-    },
-
-    {
-        "type": "function",
-        "function": {
-            "name": "predict",
-            "description": "Predicts crops based on the characteristics entered.",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "N": {"type": "integer", "description": "Ratio of Nitrogen content in soil."},
-                    "P": {"type": "integer", "description": "Ratio of Phosphorous content in soil."},
-                    "K": {"type": "integer", "description": "Ratio of Potassium content in soil."},
-                    "temperature": {"type": "number", "description": "Temperature in degree Celsius."},
-                    "humidity": {"type": "number", "description": "Relative humidity in %."},
-                    "ph": {"type": "number", "description": "PH value of the soil."},
-                    "rainfall": {"type": "number", "description": "rainfall in mm."}
-                },
-                "required": ["N", "P", "K", "temperature", "humidity", "ph", "rainfall"]
-            }
-        }
-    },
-
-    {
-        "type": "function",
-        "function": {
             "name": "sum_feature",
             "description": "Calculates the sum of a feature across the entire dataset or grouped by class.",
             "parameters": {
