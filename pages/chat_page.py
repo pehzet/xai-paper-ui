@@ -124,6 +124,7 @@ def chat_page():
 
         with st.spinner("Be right back..."):
             response, img_base64 = get_assistant_response(prompt)
+            # st.session_state.char_count += len(response)
 
         st.rerun()
            
