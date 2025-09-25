@@ -197,23 +197,20 @@ class XAIChatbot:
         completion = self.get_completion()
         response = completion.choices[0].message
         image = None
-        # while response.tool_calls:
-        #     self.add_tool_call_prior_response_to_messages(response)
-        #     tool_outputs = self.handle_tool_calls(response.tool_calls)
-        #     tool_msgs = self.create_tool_messages(tool_outputs)
+        while response.tool_calls:
+            self.add_tool_call_prior_response_to_messages(response)
+            tool_outputs = self.handle_tool_calls(response.tool_calls)
+            tool_msgs = self.create_tool_messages(tool_outputs)
 
             # self.messages.append(response)
-        #   for tool_msg in tool_msgs:
-                
-        #         self.messages.append(tool_msg)
-        #         if tool_msg["tool_call_id"] == self._tool_call_id_with_image:
-        #             image = tool_msg["content"]
-        #             self._tool_call_id_with_image = None
+            for tool_msg in tool_msgs:    
+                self.messages.append(tool_msg)
+                if tool_msg["tool_call_id"] == self._tool_call_id_with_image:
+                    image = tool_msg["content"]
+                    self._tool_call_id_with_image = None
 
-            
-        #     completion = self.get_completion()
- 
-        #    response = completion.choices[0].message
+            completion = self.get_completion()
+            response = completion.choices[0].message
 
    
         response_oai = self._create_message("assistant", response.content)
