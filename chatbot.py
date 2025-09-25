@@ -100,8 +100,8 @@ class XAIChatbot:
             fn_name = tool_call.function.name
             fn_args = tool_call.function.arguments
 
-            if fn_name == "predict":
-                output = predict(fn_args)
+            # if fn_name == "predict":
+            #     output = predict(fn_args)
 
             # elif fn_name == "generate_shap_diagram":
             #     # Keep the SHAP diagram logic example, ignoring actual implementation details
@@ -114,7 +114,7 @@ class XAIChatbot:
             #         output = shap_result
             #     # Remember the ID in case you need to reference it for images
             #     self._tool_call_id_with_image = tool_call.id
-            elif fn_name == "sum_feature":
+            if fn_name == "sum_feature":
                 output = sum_feature(fn_args)
 
             elif fn_name == "mean_feature":
