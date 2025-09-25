@@ -31,7 +31,7 @@ class XAIChatbot:
         decision_values = self._get_decision_case()
         predictions = predict_probabilities(decision_values)
   
-        instruction_message = self.create_instruction_message(placeholder=["{{ decision_values }}", "{{ predictions }}"], placeholder_value=[decision_values, predictions])
+        instruction_message = self.create_instruction_message(placeholder=["{{ decision_values }}"], placeholder_value=[decision_values])
         self.messages.append(instruction_message)
         self.messages.append(self.create_img_message())
 
@@ -203,13 +203,16 @@ class XAIChatbot:
             tool_msgs = self.create_tool_messages(tool_outputs)
 
             # self.messages.append(response)
-            for tool_msg in tool_msgs:    
+            for tool_msg in tool_msgs:
+                
                 self.messages.append(tool_msg)
                 if tool_msg["tool_call_id"] == self._tool_call_id_with_image:
                     image = tool_msg["content"]
                     self._tool_call_id_with_image = None
 
+            
             completion = self.get_completion()
+ 
             response = completion.choices[0].message
 
    
