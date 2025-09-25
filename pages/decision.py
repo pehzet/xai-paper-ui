@@ -110,9 +110,7 @@ def decision_dropdown():
             st.error("Please select a crop to plant.")
 
         else:
-            print("Correct Choices:", st.session_state.correct_choices)
             decision = selection.split(" (")[0]
-            print(decision)
             st.session_state["choices"][st.session_state.decision_no] = decision
             st.session_state.decision_made = True
 

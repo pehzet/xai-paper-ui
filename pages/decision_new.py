@@ -21,11 +21,11 @@ def decision_new():
     st.markdown(f"<p style='font-size: 20px;'> Your task is to decide which crop is the best to sow based on the given data in the table below and the feature importance diagram on the top right.<p>", unsafe_allow_html=True)
     # st.markdown(f"<p style='font-size: 20px; color:red;'> On the lower right, you find the Cropify Decision Assistant that you are supposed to interact with to support your decision-making.<p>", unsafe_allow_html=True)
     st.markdown(f"<p style='font-size: 20px;'> Select the crop from the dropdown list and click on the Submit button. <p>", unsafe_allow_html=True)
-    row1 = st.container(border=True)
+    row1 = st.container()
     with row1:
         st.markdown("Select the crop you think is best from the dropdown list below.")
         decision_dropdown()
-    row2 = st.container(border=True)
+    row2 = st.container()
     col1_1, col1_2 = st.columns(2, gap="small", border=True)
     with row2:
         with col1_1:
@@ -35,7 +35,7 @@ def decision_new():
     # row2 = st.container(border=True)
     # with row2:
     #     prediction_element()
-    row3 = st.container(border=True)
+    row3 = st.container()
 
     col3_1, col3_2 = st.columns(2, gap="small", border=True)
     with row3:

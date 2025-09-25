@@ -138,7 +138,6 @@ def complete_decision():
         st.session_state["page"] = "chat"
     if st.session_state.current_choice_is_correct:
         st.session_state.correct_choices += 1
-        print("Correct Choices:", st.session_state.correct_choices)
         st.session_state.current_choice_is_correct = None
     # st.session_state.assistant = XAIChatbot(decision_no=st.session_state.decision_no)
     save_session_state()
