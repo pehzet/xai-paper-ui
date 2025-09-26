@@ -58,19 +58,20 @@ class XAIChatbot:
     def get_messages(self):
         return self.messages
     def create_img_message(self, decision_no=None):
-        if decision_no is None:
-            file_name_1 = "global_explanation.png"
-            file_name_2 = "local_explanation.png"
-        else:
-            file_name_1 = f"case{decision_no}_global.png"
-            file_name_2 = f"case{decision_no}_local.png"
-        base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
+        # if decision_no is None:
+        #     file_name_1 = "global_explanation.png"
+        #     file_name_2 = "local_explanation.png"
+        # else:
+        #     file_name_1 = f"case{decision_no}_global.png"
+        #     file_name_2 = f"case{decision_no}_local.png"
+        # base_dir = os.path.dirname(os.path.abspath(__file__))  # aktuelles Verzeichnis
         # image1_path = os.path.join(base_dir, "images", file_name_1)
         # image2_path = os.path.join(base_dir, "images", file_name_2)
-        global_image_path = os.path.join(base_dir, "images", "shap_global_bar.png")
+        # global_image_path = os.path.join(base_dir, "images", "shap_global_bar.png")
         # img1 = self.encode_image(image1_path)
         # img2 = self.encode_image(image2_path)
-        global_img = self.encode_image(global_image_path)
+        # global_img = self.encode_image(global_image_path)
+        img_url = st.secrets.get("image").get("img_url")
         message = {
             "role": "user",
             "content": [
@@ -81,7 +82,8 @@ class XAIChatbot:
         {
           "type": "image_url",
           "image_url": {
-            "url":  f"data:image/png;base64,{global_img}"
+            # "url":  f"data:image/png;base64,{global_img}"
+            "url": img_url
           },
         },
               
