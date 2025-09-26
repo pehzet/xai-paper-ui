@@ -5,7 +5,7 @@ import streamlit as st
 
 def show_data_table():
     st.markdown("Optimal Values for Parameters")
-    st.markdown("This table shows the quartils (Q1 and Q3) for the parameters used in the prediction model.")
+    st.markdown("This table shows the quartiles (Q1 and Q3) for the parameters used in the prediction model.")
     st.markdown("These values were determined based on the training data and are used to make predictions.")
     FILE_PATH = Path("prediction_model/data/optimal_ranges.csv")
 
